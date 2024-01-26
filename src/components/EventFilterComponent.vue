@@ -64,7 +64,7 @@ export default {
       filteredData: [],
       columns: [
         { name: 'title', label: 'Esemény neve', align: 'left', field: 'title', sortable: true, headerStyle: 'font-weight: bold; font-size: 16px;' },
-        { name: 'location', label: 'Helyszín', align: 'left', field: 'location',  sortable: true, headerStyle: 'font-weight: bold; font-size: 16px;' },
+        { name: 'location', label: 'Város', align: 'left', field: 'location',  sortable: true, headerStyle: 'font-weight: bold; font-size: 16px;' },
         { name: 'participants', label: 'Résztvevők száma', align: 'left', field: 'participants', sortable: true, headerStyle: 'font-weight: bold; font-size: 16px;' },
         { name: 'date', label: 'Dátum', align: 'left', field: 'date', sortable: true, headerStyle: 'font-weight: bold; font-size: 16px;' },
       ],
