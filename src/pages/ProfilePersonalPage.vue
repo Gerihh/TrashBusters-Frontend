@@ -6,6 +6,7 @@
         <div class="text-h6 text-center">{{ user.username }} #{{ user.id }}</div>
       </q-card-section>
     </q-card>
+
   </div>
 
 </template>
@@ -20,6 +21,7 @@ export default defineComponent({
   data() {
     return {
       user: null,
+      selectedFile: null,
     };
   },
   mounted() {
