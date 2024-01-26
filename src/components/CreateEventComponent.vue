@@ -4,12 +4,13 @@
   </div>
 
   <div class="absolute-center" v-if="showForm">
-      <q-card square bordered class="q-pa-md shadow-1" style="width: 500px; height: 400px;">
+      <q-card square bordered class="q-pa-md shadow-1" style="width: 500px; min-height: 100px;">
                 <q-form class="q-gutter-md" @submit.prevent="createEvent">
                   <q-input square filled clearable v-model="title" type="title" label="Cím" required/>
                   <q-input square filled clearable v-model="description" type="description" label="Leírás"/>
                   <q-input square filled clearable v-model="location" type="location" label="Város" required/>
-                  <q-input square filled clearable v-model="date" type="date" label="Dátum" required/>
+                  <q-input square filled clearable v-model="place" type="place" label="Utca, tér" required/>
+                  <q-input square filled clearable v-model="date" type="date" label="Dátum" :min="minDate" required/>
                   <q-card-section>
                     <q-btn type="submit" unelevated color="green-7" size="lg" class="full-width" label="Esemény létrehozása" />
                   </q-card-section>
@@ -30,10 +31,16 @@ export default {
       title: '',
       description: '',
       location: '',
+      place: '',
       date: '',
       participants: '',
-      creatorId: ''
+      creatorId: '',
+      minDate: '',
     };
+  },
+  mounted() {
+  const today = new Date().toISOString().split('T')[0];
+  this.minDate = today;
   },
   methods: {
     async createEvent() {
@@ -50,6 +57,7 @@ export default {
           title: this.title,
           description: this.description,
           location: this.location,
+          place: this.place,
           date: this.date,
           participants: this.participants + 1,
           creatorId: this.creatorId,
@@ -62,6 +70,7 @@ export default {
         this.title = '';
         this.description = '';
         this.location = '';
+        this.place = '';
         this.date = '';
     } catch (error) {
         console.error('Error creating event:', error);

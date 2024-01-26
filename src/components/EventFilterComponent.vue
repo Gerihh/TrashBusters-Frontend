@@ -3,6 +3,7 @@
     <div class="q-gutter-lg row items-start" >
         <q-input v-model="searchTitle" filled clearable type="search" label="Esemény neve" style="width: 300px;"/>
         <q-input v-model="searchCity" clearable label="Város" filled style="width: 250px;"/>
+        <q-input v-model="searchAddress" clearable label="Utca, tér" filled style="width: 250px;"/>
         <q-input v-model.number="model" type="number" filled label="Min. résztvevők" :min="0" style="width: 150px;"/>
         <q-input v-model="date" type="date" filled label="Dátum" :min="minDate"/>
         <q-btn @click="searchData" label="Keresés" color="green" style="margin-top: 30px; padding: 10px; width: 150px;"/>
@@ -18,7 +19,6 @@
         @row-click="openCard"
       />
   </div>
-
   <q-dialog v-model="cardVisible">
   <q-card style="min-width: 500px;;min-height: 100px;">
     <q-card-section>
@@ -26,7 +26,7 @@
         <h2 class="text-h6 q-mb-md text-center">{{ selectedRow.title }}</h2>
         <p class="text-body2 q-mb-md">{{ selectedRow.description }}</p>
         <div class="q-mb-md">
-          <strong>Város:</strong> {{ selectedRow.location }}
+          <strong>Helyszín:</strong> {{ selectedRow.location }}, {{ selectedRow.place }}
         </div>
         <div class="q-mb-md">
           <strong>Résztvevők:</strong> {{ selectedRow.participants }} fő
@@ -57,12 +57,13 @@ export default {
     return {
       searchTitle: '',
       searchCity: '',
+      searchAddress: '',
       model: 0,
       date: '',
       filteredData: [],
       columns: [
         { name: 'title', label: 'Esemény neve', align: 'left', field: 'title', sortable: true, headerStyle: 'font-weight: bold; font-size: 16px;' },
-        { name: 'location', label: 'Város', align: 'left', field: 'location', sortable: true, headerStyle: 'font-weight: bold; font-size: 16px;' },
+        { name: 'location', label: 'Helyszín', align: 'left', field: 'location',  sortable: true, headerStyle: 'font-weight: bold; font-size: 16px;' },
         { name: 'participants', label: 'Résztvevők száma', align: 'left', field: 'participants', sortable: true, headerStyle: 'font-weight: bold; font-size: 16px;' },
         { name: 'date', label: 'Dátum', align: 'left', field: 'date', sortable: true, headerStyle: 'font-weight: bold; font-size: 16px;' },
       ],
@@ -84,20 +85,22 @@ export default {
           params: {
             title: this.searchTitle,
             location: this.searchCity,
+            place: this.searchAddress,
             participants: this.model,
             date: this.date,
           },
         });
 
-
           this.filteredData = response.data.filter(item => {
 
             const lowerSearch = this.searchTitle.toLowerCase();
             const lowerCity = this.searchCity.toLowerCase();
+            const lowerPlace = this.searchAddress.toLowerCase();
 
             return (
         (item.title.toLowerCase().includes(lowerSearch) == true) &&
         (item.location.toLowerCase().includes(lowerCity) == true) &&
+        (item.place.toLowerCase().includes(lowerPlace) == true) &&
         (item.participants >= parseInt(this.model) == true) &&
         (this.date ? item.date === this.date : true)
       );
@@ -109,6 +112,7 @@ export default {
     async filterReset() {
       this.searchTitle = '';
       this.searchCity = '';
+      this.searchAddress = '';
       this.model = 0;
       this.date = '';
       this.filteredData = [];
@@ -150,6 +154,7 @@ export default {
     } catch (error) {
         console.error('Error joining event:', error);
         alert('Hiba a csatlakozás során!');
+        this.closeCard();
       }
     },
     async getCreatorName() {
