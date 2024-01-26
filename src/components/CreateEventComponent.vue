@@ -11,6 +11,7 @@
                   <q-input square filled clearable v-model="location" type="location" label="Város" required/>
                   <q-input square filled clearable v-model="place" type="place" label="Utca, tér" required/>
                   <q-input square filled clearable v-model="date" type="date" label="Dátum" :min="minDate" required/>
+                  <q-input square filled clearable v-model="time" type="time" label="Időpont" required/>
                   <q-card-section>
                     <q-btn type="submit" unelevated color="green-7" size="lg" class="full-width" label="Esemény létrehozása" />
                   </q-card-section>
@@ -33,14 +34,15 @@ export default {
       location: '',
       place: '',
       date: '',
+      time: '',
       participants: '',
       creatorId: '',
       minDate: '',
     };
   },
   mounted() {
-  const today = new Date().toISOString().split('T')[0];
-  this.minDate = today;
+    const today =  new Date().toISOString().split('T')[0];
+    this.minDate = today;
   },
   methods: {
     async createEvent() {
@@ -59,6 +61,7 @@ export default {
           location: this.location,
           place: this.place,
           date: this.date,
+          time: this.time,
           participants: this.participants + 1,
           creatorId: this.creatorId,
         };
@@ -72,6 +75,7 @@ export default {
         this.location = '';
         this.place = '';
         this.date = '';
+        this.time = '';
     } catch (error) {
         console.error('Error creating event:', error);
         alert('Hiba a felvétel során!');

@@ -17,6 +17,7 @@
         row-key="id"
         class="q-mt-md"
         @row-click="openCard"
+        :rows-per-page-options="[12]"
       />
   </div>
   <q-dialog v-model="cardVisible">
@@ -32,7 +33,7 @@
           <strong>Résztvevők:</strong> {{ selectedRow.participants }} fő
         </div>
         <div class="q-mb-md">
-          <strong>Dátum:</strong> {{ selectedRow.date }}
+          <strong>Időpont:</strong> {{ selectedRow.date }}, {{ selectedRow.time }}
         </div>
         <div class="q-mb-md">
           <strong>Szervező:</strong> {{ creatorName }}
@@ -102,7 +103,7 @@ export default {
         (item.location.toLowerCase().includes(lowerCity) == true) &&
         (item.place.toLowerCase().includes(lowerPlace) == true) &&
         (item.participants >= parseInt(this.model) == true) &&
-        (this.date ? item.date === this.date : true)
+        (this.date ? item.date.includes(this.date) : true)
       );
           });
       } catch (error) {
