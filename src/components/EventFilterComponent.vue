@@ -78,6 +78,7 @@ export default {
   mounted() {
   const today = new Date().toISOString().split('T')[0];
   this.minDate = today;
+  this.searchData();
   },
   methods: {
     async searchData() {

@@ -1,19 +1,69 @@
 <template>
-  <div class="q-ma-lg row" v-if="user">
+  <div class="q-ma-lg row justify-center" v-if="user">
     <q-card class="my-card" flat style="background-color: #fafafa;">
       <img :src="user.profilePictureURL" style="border-radius: 50%;" />
-      <q-card-section>
+      <q-card-section class="">
         <div class="text-h6 text-center">{{ user.username }} #{{ user.id }}</div>
       </q-card-section>
     </q-card>
-
   </div>
+
+  <div>
+    <div class="q-mt-md q-ma-lg">
+      <q-table
+        :rows="eventsCreatedByUser"
+        :columns="columns"
+        row-key="id"
+        @row-click="openCard"
+        :rows-per-page-options="[5]"
+        title="Szervező vagyok"
+      />
+    </div>
+
+    <div class="q-mt-md q-ma-lg">
+      <q-table
+        :rows="eventsJoinedByUser"
+        :columns="columns"
+        row-key="id"
+        @row-click="openCard"
+        :rows-per-page-options="[5]"
+        title="Résztvevő vagyok"
+      />
+    </div>
+  </div>
+
+  <q-dialog v-model="cardVisible">
+  <q-card style="min-width: 500px;;min-height: 100px;">
+    <q-card-section>
+      <div v-if="selectedRow">
+        <h2 class="text-h6 q-mb-md text-center">{{ selectedRow.title }}</h2>
+        <p class="text-body2 q-mb-md">{{ selectedRow.description }}</p>
+        <div class="q-mb-md">
+          <strong>Helyszín:</strong> {{ selectedRow.location }}, {{ selectedRow.place }}
+        </div>
+        <div class="q-mb-md">
+          <strong>Résztvevők:</strong> {{ selectedRow.participants }} fő
+        </div>
+        <div class="q-mb-md">
+          <strong>Időpont:</strong> {{ selectedRow.date }}, {{ selectedRow.time }}
+        </div>
+        <div class="q-mb-md">
+          <strong>Szervező:</strong> {{ creatorName }}
+        </div>
+      </div>
+    </q-card-section>
+    <q-card-actions class="q-gutter-sm">
+      <q-btn class="q-col q-ma-md" label="Bezárás" color="red" @click="closeCard" />
+    </q-card-actions>
+  </q-card>
+</q-dialog>
 
 </template>
 
 <script>
 import { defineComponent } from 'vue';
 import Cookies from 'js-cookie';
+import axios from 'axios';
 
 export default defineComponent({
   name: "ProfilePersonalPage",
@@ -21,12 +71,73 @@ export default defineComponent({
   data() {
     return {
       user: null,
-      selectedFile: null,
+      eventsCreatedByUser: [],
+      eventsJoinedByUser: [],
+      columns: [
+        { name: 'title', label: 'Esemény neve', align: 'left', field: 'title', sortable: true, headerStyle: 'font-weight: bold; font-size: 16px;' },
+        { name: 'location', label: 'Város', align: 'left', field: 'location',  sortable: true, headerStyle: 'font-weight: bold; font-size: 16px;' },
+        { name: 'participants', label: 'Résztvevők száma', align: 'left', field: 'participants', sortable: true, headerStyle: 'font-weight: bold; font-size: 16px;' },
+        { name: 'date', label: 'Dátum', align: 'left', field: 'date', sortable: true, headerStyle: 'font-weight: bold; font-size: 16px;' },
+      ],
+      cardVisible: false,
+      selectedRow: null,
+      creatorName: null,
+      userId: '',
     };
   },
   mounted() {
     const storedUser = Cookies.get('user');
     this.user = storedUser ? JSON.parse(storedUser) : null;
+
+    this.getEventsCreatedByUser();
+    this.getEventsJoinedByUser();
   },
+  methods: {
+    async getEventsCreatedByUser() {
+      try {
+        const response = await axios.get(`/api/events/creator/${this.user.id}`);
+        this.eventsCreatedByUser = response.data;
+      } catch (error) {
+        console.error('Error fetching events created by user:', error);
+      }
+    },
+    async getEventsJoinedByUser() {
+      try {
+        const response = await axios.get(`/api/participants/events/joined/${this.user.id}`);
+        this.eventsJoinedByUser = response.data;
+      } catch (error) {
+        console.error('Error fetching events joined by user:', error);
+      }
+    },
+    async openCard(event, row, columnIndex) {
+      console.log('Event clicked',row);
+      this.selectedRow = row;
+      this.cardVisible = true;
+      await this.getCreatorName();
+    },
+    closeCard() {
+      this.selectedRow = null;
+      this.cardVisible = false;
+    },
+    async getCreatorName() {
+      try {
+    if (!this.selectedRow || !this.selectedRow.creatorId) {
+      this.creatorName = null;
+      return;
+    }
+
+    const response = await axios.get(`/api/users/${this.selectedRow.creatorId}`);
+
+    // Assuming the response.data contains the user data
+    const user = response.data;
+
+    // Access the username property
+    this.creatorName = user.username;
+  } catch (error) {
+    console.error('Error fetching creator name:', error);
+    // Handle the error as needed
+  }
+},
+  }
 });
 </script>
