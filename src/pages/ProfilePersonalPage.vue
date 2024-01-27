@@ -9,7 +9,7 @@
   </div>
 
   <div>
-    <div class="q-mt-md q-ma-lg">
+    <div class="q-mt-md q-ma-lg" v-if="eventsCreatedByUser.length > 0">
       <q-table
         :rows="eventsCreatedByUser"
         :columns="columns"
@@ -20,7 +20,7 @@
       />
     </div>
 
-    <div class="q-mt-md q-ma-lg">
+    <div class="q-mt-md q-ma-lg" v-if="eventsJoinedByUser.length > 0">
       <q-table
         :rows="eventsJoinedByUser"
         :columns="columns"

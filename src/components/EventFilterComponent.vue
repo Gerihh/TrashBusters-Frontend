@@ -43,7 +43,7 @@
     <q-card-actions class="q-gutter-sm">
       <q-btn class="q-col q-ma-md" label="Bezárás" color="red" @click="closeCard" />
         <q-space />
-      <q-btn class="q-col q-ma-md" label="Csatlakozás" color="green" @click="joinEvent" />
+        <q-btn class="q-col q-ma-md" label="Csatlakozás" color="green" @click="joinEvent" :disabled="pairExists"/>
     </q-card-actions>
   </q-card>
 </q-dialog>
@@ -73,9 +73,14 @@ export default {
       userId: '',
       creatorName: null,
       minDate: '',
+      pairExists: false,
+      user: null,
     };
   },
   mounted() {
+  const storedUser = Cookies.get('user');
+  this.user = storedUser ? JSON.parse(storedUser) : null;
+
   const today = new Date().toISOString().split('T')[0];
   this.minDate = today;
   this.searchData();
@@ -123,8 +128,10 @@ export default {
     async openCard(event, row, columnIndex) {
       console.log('Event clicked',row);
       this.selectedRow = row;
+      this.getCreatorName();
+      this.checkPairExists();
       this.cardVisible = true;
-      await this.getCreatorName();
+
     },
     closeCard() {
       this.selectedRow = null;
@@ -178,6 +185,15 @@ export default {
     // Handle the error as needed
   }
 },
+  async checkPairExists() {
+    try {
+      const response = await axios.get(`/api/participants/check/${this.selectedRow.id}/${this.user.id}`);
+      this.pairExists = response.data.exists;
+    } catch (error) {
+      console.error('Error checking if user is already joined:', error);
+    }
+
+  },
   },
 };
 </script>
