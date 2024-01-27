@@ -126,7 +126,6 @@ export default {
       this.searchData();
     },
     async openCard(event, row, columnIndex) {
-      console.log('Event clicked',row);
       this.selectedRow = row;
       this.getCreatorName();
       this.checkPairExists();
@@ -138,7 +137,7 @@ export default {
       this.cardVisible = false;
     },
     async participantJoined() {
-      const response = await axios.patch(`api/events/${this.selectedRow.id}`, {
+      await axios.patch(`api/events/${this.selectedRow.id}`, {
         participants : this.selectedRow.participants + 1,
       });
     },
@@ -157,7 +156,6 @@ export default {
           userId: this.userId,
         });
         this.participantJoined();
-        console.log('Event created', response.data);
         alert('Sikeresen csatlakozott az eseményhez!');
         this.closeCard();
     } catch (error) {

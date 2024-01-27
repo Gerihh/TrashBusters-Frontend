@@ -66,8 +66,7 @@ export default {
           creatorId: this.creatorId,
         };
 
-        const response = await axios.post('/api/events', requestData);
-        console.log('Event created', response.data);
+        await axios.post('/api/events', requestData);
         alert('Sikeresen létrehozta az eseményt!');
 
         this.title = '';

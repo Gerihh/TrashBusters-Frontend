@@ -110,7 +110,6 @@ export default defineComponent({
       }
     },
     async openCard(event, row, columnIndex) {
-      console.log('Event clicked',row);
       this.selectedRow = row;
       this.cardVisible = true;
       await this.getCreatorName();

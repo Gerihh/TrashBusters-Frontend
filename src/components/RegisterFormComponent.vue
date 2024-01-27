@@ -32,7 +32,7 @@ export default {
   methods: {
     async register() {
       try {
-        const response = await axios.post('/api/auth/register', {
+        await axios.post('/api/auth/register', {
           email: this.email,
           username: this.username,
           password: this.password,
