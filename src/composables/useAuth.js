@@ -1,7 +1,13 @@
 import { ref } from 'vue';
 import axios from 'axios';
+import Cookies from 'js-cookie';
 
 const isLoggedIn = ref(false);
+
+if (Cookies.get('user') != null) {
+  isLoggedIn.value = true;
+}
+
 const user = ref(null);
 
 const login = async (email, password) => {
