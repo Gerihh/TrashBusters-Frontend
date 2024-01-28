@@ -151,7 +151,7 @@ export default {
 
         this.userId = user.id
 
-        const response = await axios.post('/api/participants', {
+        await axios.post('/api/participants', {
           eventId: this.selectedRow.id,
           userId: this.userId,
         });

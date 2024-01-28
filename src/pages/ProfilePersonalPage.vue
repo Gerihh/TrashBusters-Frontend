@@ -56,6 +56,7 @@
       <q-btn class="q-col q-ma-md" label="Bezárás" color="red" @click="closeCard" />
       <q-space/>
       <q-btn v-if="openedFromCreator" class="q-col q-ma-md" label="Esemény törlése" color="red" @click="deleteEvent"/>
+      <q-btn v-else class="q-col q-ma-md" label="Esemény elhagyása" color="red" @click="leaveEvent"/>
     </q-card-actions>
   </q-card>
 </q-dialog>
@@ -147,12 +148,29 @@ export default defineComponent({
   async deleteEvent() {
     try {
       await axios.delete(`/api/events/${this.selectedRow.id}`);
+      alert('Sikeresen töröltem az eseményt!');
       this.closeCard();
       window.location.reload();
     } catch (error) {
       console.error('Error deleting event:', error);
     }
   },
+  async leaveEvent() {
+    try {
+      await axios.delete(`/api/participants/delete/${this.selectedRow.id}/${this.user.id}`);
+      this.participantLeft();
+      alert('Sikeresen elhagyta az eseményt!');
+      this.closeCard();
+      window.location.reload();
+    } catch (error) {
+      console.error('Error leaving event:', error);
+    }
+  },
+  async participantLeft() {
+      await axios.patch(`api/events/${this.selectedRow.id}`, {
+        participants : this.selectedRow.participants - 1,
+      });
+    },
   }
 });
 </script>
