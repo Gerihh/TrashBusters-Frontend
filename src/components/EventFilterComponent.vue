@@ -157,6 +157,7 @@ export default {
         });
         this.participantJoined();
         alert('Sikeresen csatlakozott az eseményhez!');
+        window.location.reload();
         this.closeCard();
     } catch (error) {
         console.error('Error joining event:', error);
@@ -190,7 +191,6 @@ export default {
     } catch (error) {
       console.error('Error checking if user is already joined:', error);
     }
-
   },
   },
 };

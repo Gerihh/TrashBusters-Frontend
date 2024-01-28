@@ -14,7 +14,7 @@
         :rows="eventsCreatedByUser"
         :columns="columns"
         row-key="id"
-        @row-click="openCard"
+        @row-click="openCardCreator"
         :rows-per-page-options="[5]"
         title="Szervező vagyok"
       />
@@ -25,7 +25,7 @@
         :rows="eventsJoinedByUser"
         :columns="columns"
         row-key="id"
-        @row-click="openCard"
+        @row-click="openCardParticipant"
         :rows-per-page-options="[5]"
         title="Résztvevő vagyok"
       />
@@ -54,6 +54,8 @@
     </q-card-section>
     <q-card-actions class="q-gutter-sm">
       <q-btn class="q-col q-ma-md" label="Bezárás" color="red" @click="closeCard" />
+      <q-space/>
+      <q-btn v-if="openedFromCreator" class="q-col q-ma-md" label="Esemény törlése" color="red" @click="deleteEvent"/>
     </q-card-actions>
   </q-card>
 </q-dialog>
@@ -83,6 +85,7 @@ export default defineComponent({
       selectedRow: null,
       creatorName: null,
       userId: '',
+      openedFromCreator: false,
     };
   },
   mounted() {
@@ -109,9 +112,16 @@ export default defineComponent({
         console.error('Error fetching events joined by user:', error);
       }
     },
-    async openCard(event, row, columnIndex) {
+    async openCardCreator(event, row, columnIndex) {
       this.selectedRow = row;
       this.cardVisible = true;
+      this.openedFromCreator = true;
+      await this.getCreatorName();
+    },
+    async openCardParticipant(event, row, columnIndex) {
+      this.selectedRow = row;
+      this.cardVisible = true;
+      this.openedFromCreator = false;
       await this.getCreatorName();
     },
     closeCard() {
@@ -127,16 +137,22 @@ export default defineComponent({
 
     const response = await axios.get(`/api/users/${this.selectedRow.creatorId}`);
 
-    // Assuming the response.data contains the user data
     const user = response.data;
 
-    // Access the username property
     this.creatorName = user.username;
   } catch (error) {
     console.error('Error fetching creator name:', error);
-    // Handle the error as needed
   }
 },
+  async deleteEvent() {
+    try {
+      await axios.delete(`/api/events/${this.selectedRow.id}`);
+      this.closeCard();
+      window.location.reload();
+    } catch (error) {
+      console.error('Error deleting event:', error);
+    }
+  },
   }
 });
 </script>
