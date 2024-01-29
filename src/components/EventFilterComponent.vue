@@ -7,7 +7,7 @@
         <q-input v-model.number="model" type="number" filled label="Min. résztvevők" :min="0" style="width: 150px;"/>
         <q-input v-model="date" type="date" filled label="Dátum" :min="minDate"/>
         <q-btn @click="searchData" label="Keresés" color="green" style="margin-top: 30px; padding: 10px; width: 150px;"/>
-        <q-btn @click="filterReset" label="Szűrők törlése" color="red" style="margin-top: 30px; padding: 10px; width: 150px;"/>
+        <q-btn @click="filterReset"  label="Szűrők törlése" color="red" style="margin-top: 30px; padding: 10px; width: 150px;"/>
     </div>
   </div>
   <div v-if="filteredData.length > 0" class="q-ma-lg" style="margin-top: 80px;">
@@ -97,8 +97,7 @@ export default {
             date: this.date,
           },
         });
-
-          this.filteredData = response.data.filter(item => {
+            this.filteredData = response.data.filter(item => {
 
             const lowerSearch = this.searchTitle.toLowerCase();
             const lowerCity = this.searchCity.toLowerCase();

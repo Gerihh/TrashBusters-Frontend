@@ -34,7 +34,7 @@
           </q-item>
           <q-separator inset class="q-my-sm" />
 
-          <q-item class="GNL__drawer-item" clickable to="/">
+          <q-item class="GNL__drawer-item" clickable to="/profile/settings">
             <q-item-section avatar/>
             <q-item-section>
               <q-item-label>Beállítások</q-item-label>

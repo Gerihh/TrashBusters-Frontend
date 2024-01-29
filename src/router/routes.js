@@ -33,6 +33,10 @@ const routes = [
         path: "events",
         component: () => import("pages/ProfileEventsPage.vue"),
       },
+      {
+        path: "settings",
+        component: () => import("pages/ProfileSettingsPage.vue"),
+      },
     ]
   },
 
