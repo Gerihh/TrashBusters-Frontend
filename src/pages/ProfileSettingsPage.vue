@@ -11,10 +11,11 @@
   <q-dialog v-model="deleteConfirmationVisible">
     <q-card>
       <q-card-section class="text-h6">
-        Biztosan törölni szeretné a profilt?
+        Biztosan törölni szeretné a profilját?
       </q-card-section>
       <q-card-actions align="right">
         <q-btn label="Nem" color="grey" @click="cancelDelete" />
+        <q-space/>
         <q-btn label="Igen" color="red" @click="confirmDelete" />
       </q-card-actions>
     </q-card>
@@ -69,7 +70,7 @@ export default defineComponent({
         console.error("Error deleting profile:", error);
       }
       await axios.delete(`/api/users/${this.user.id}`);
-      alert("Sikeresen törölted a profilját!");
+      alert("Sikeresen törölte a profilját!");
       this.logout();
       this.deleteConfirmationVisible = false;
     },

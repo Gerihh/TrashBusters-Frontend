@@ -1,7 +1,7 @@
 <template>
   <div class="q-ma-lg row justify-center" v-if="user">
-    <q-card class="my-card" flat style="background-color: #fafafa">
-      <img :src="user.profilePictureURL" style="border-radius: 50%" />
+    <q-card class="my-card" flat style="background-color: #fafafa; max-width: 300px;" >
+      <img :src="user.profilePictureURL" alt="Profilkép" style="border-radius: 50%" />
       <q-card-section class="">
         <div class="text-h6 text-center">
           {{ user.username }} #{{ user.id }}

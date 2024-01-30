@@ -29,7 +29,7 @@
           <q-item class="GNL__drawer-item" clickable to="/profile/personal">
             <q-item-section avatar/>
             <q-item-section>
-              <q-item-label>Személyes adatok</q-item-label>
+              <q-item-label>Eseményeim</q-item-label>
             </q-item-section>
           </q-item>
           <q-separator inset class="q-my-sm" />
