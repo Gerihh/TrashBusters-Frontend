@@ -18,5 +18,3 @@ import useUser from "../composables/userApi";
 const { userData, error, getAllUser } = useUser();
 onMounted(getAllUser);
 </script>
-
-
