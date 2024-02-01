@@ -135,7 +135,6 @@ export default defineComponent({
       creatorName: null,
       userId: "",
       openedFromCreator: false,
-      selectedFile: null,
     };
   },
   mounted() {
