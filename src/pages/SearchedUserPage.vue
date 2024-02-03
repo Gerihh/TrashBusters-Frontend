@@ -1,5 +1,5 @@
 <template>
-  <div class="q-ma-lg row justify-center" v-if="user">
+   <div class="q-ma-lg row justify-center" v-if="user">
     <q-card class="my-card" flat style="background-color: #fafafa; max-width: 300px;" >
       <img :src="user.profilePictureURL" alt="Profilkép" style="border-radius: 50%" />
       <q-card-section class="">
@@ -16,9 +16,9 @@
         :rows="eventsCreatedByUser"
         :columns="columns"
         row-key="id"
-        @row-click="openCardCreator"
+        @row-click="openCard"
         :rows-per-page-options="[5]"
-        title="Szervező vagyok"
+        title="Szervező"
       />
     </div>
 
@@ -27,9 +27,9 @@
         :rows="eventsJoinedByUser"
         :columns="columns"
         row-key="id"
-        @row-click="openCardParticipant"
+        @row-click="openCard"
         :rows-per-page-options="[5]"
-        title="Résztvevő vagyok"
+        title="Résztvevő"
       />
     </div>
   </div>
@@ -63,38 +63,26 @@
           color="red"
           @click="closeCard"
         />
-        <q-space />
-        <q-btn
-          v-if="openedFromCreator"
-          class="q-col q-ma-md"
-          label="Esemény törlése"
-          color="red"
-          @click="deleteEvent"
-        />
-        <q-btn
-          v-else
-          class="q-col q-ma-md"
-          label="Esemény elhagyása"
-          color="red"
-          @click="leaveEvent"
-        />
       </q-card-actions>
     </q-card>
   </q-dialog>
+
 </template>
 
 <script>
-import { defineComponent } from "vue";
-import Cookies from "js-cookie";
 import axios from "axios";
+import { defineComponent } from "vue";
 
 export default defineComponent({
-  name: "ProfilePersonalPage",
+    name: "SearchedUserPage",
 
-  data() {
-    return {
-      user: null,
-      eventsCreatedByUser: [],
+    data() {
+      return {
+        user: null,
+        userId: null,
+        username: null,
+        profilePictureURL: null,
+        eventsCreatedByUser: [],
       eventsJoinedByUser: [],
       columns: [
         {
@@ -133,21 +121,28 @@ export default defineComponent({
       cardVisible: false,
       selectedRow: null,
       creatorName: null,
-      userId: "",
-      openedFromCreator: false,
-    };
-  },
-  mounted() {
-    const storedUser = Cookies.get("user");
-    this.user = storedUser ? JSON.parse(storedUser) : null;
+      };
+    },
+    mounted() {
+      this.userId = this.$route.params.id;
 
-    this.getEventsCreatedByUser();
-    this.getEventsJoinedByUser();
-  },
-  methods: {
-    async getEventsCreatedByUser() {
+      this.getUserById();
+
+      this.getEventsCreatedByUser();
+      this.getEventsJoinedByUser();
+    },
+    methods: {
+      async getUserById() {
+        try {
+          const response = await axios.get(`/api/users/${this.userId}`);
+          this.user = response.data;
+        } catch (error) {
+          console.error("Error fetching user by id:", error);
+        }
+      },
+      async getEventsCreatedByUser() {
       try {
-        const response = await axios.get(`/api/events/creator/${this.user.id}`);
+        const response = await axios.get(`/api/events/creator/${this.userId}`);
         this.eventsCreatedByUser = response.data;
       } catch (error) {
         console.error("Error fetching events created by user:", error);
@@ -155,24 +150,16 @@ export default defineComponent({
     },
     async getEventsJoinedByUser() {
       try {
-        const response = await axios.get(
-          `/api/participants/events/joined/${this.user.id}`
+        const response = await axios.get(`/api/participants/events/joined/${this.userId}`
         );
         this.eventsJoinedByUser = response.data;
       } catch (error) {
         console.error("Error fetching events joined by user:", error);
       }
     },
-    async openCardCreator(event, row, columnIndex) {
+    async openCard(event, row, columnIndex) {
       this.selectedRow = row;
       this.cardVisible = true;
-      this.openedFromCreator = true;
-      await this.getCreatorName();
-    },
-    async openCardParticipant(event, row, columnIndex) {
-      this.selectedRow = row;
-      this.cardVisible = true;
-      this.openedFromCreator = false;
       await this.getCreatorName();
     },
     closeCard() {
@@ -185,7 +172,6 @@ export default defineComponent({
           this.creatorName = null;
           return;
         }
-
         const response = await axios.get(
           `/api/users/${this.selectedRow.creatorId}`
         );
@@ -197,34 +183,6 @@ export default defineComponent({
         console.error("Error fetching creator name:", error);
       }
     },
-    async deleteEvent() {
-      try {
-        await axios.delete(`/api/events/${this.selectedRow.id}`);
-        alert("Sikeresen töröltem az eseményt!");
-        this.closeCard();
-        window.location.reload();
-      } catch (error) {
-        console.error("Error deleting event:", error);
-      }
-    },
-    async leaveEvent() {
-      try {
-        await axios.delete(
-          `/api/participants/delete/${this.selectedRow.id}/${this.user.id}`
-        );
-        this.participantLeft();
-        alert("Sikeresen elhagyta az eseményt!");
-        this.closeCard();
-        window.location.reload();
-      } catch (error) {
-        console.error("Error leaving event:", error);
-      }
-    },
-    async participantLeft() {
-      await axios.patch(`api/events/${this.selectedRow.id}`, {
-        participants: this.selectedRow.participants - 1,
-      });
-    },
-  },
+    }
 });
 </script>

@@ -18,7 +18,15 @@ const routes = [
       {
         path: "events",
         component: () => import("pages/EventsPage.vue"),
-      }
+      },
+      {
+        path: "users",
+        component: () => import("pages/UsersPage.vue"),
+      },
+      {
+        path: "user/:id",
+        component: () => import("pages/SearchedUserPage.vue"),
+      },
     ]
   },
   {
@@ -32,6 +40,10 @@ const routes = [
       {
         path: "events",
         component: () => import("pages/ProfileEventsPage.vue"),
+      },
+      {
+        path: "settings",
+        component: () => import("pages/ProfileSettingsPage.vue"),
       },
     ]
   },
