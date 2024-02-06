@@ -38,6 +38,7 @@ export default defineComponent({
     return {
       mostParticipantsEvent: null,
       latestEvent: null,
+      closestEvent: null,
       cards: [
         {
           category: "",
@@ -77,6 +78,7 @@ export default defineComponent({
   mounted() {
     this.getEventWithMostParticipants();
     this.getLatestEvent();
+    this.getClosestEvent();
   },
   methods: {
     async getEventWithMostParticipants() {
@@ -114,6 +116,26 @@ export default defineComponent({
         this.cards[1].time = this.latestEvent.time;
         axios.get(`/api/users/${this.latestEvent.creatorId}`).then(response => {
           this.cards[1].creatorName = response.data.username;
+        })
+      } catch (error) {
+        console.error("Error fetching most participants event:", error);
+      }
+    },
+    async getClosestEvent() {
+      try {
+        const response = await axios.get('/api/event/closest');
+        this.closestEvent = response.data
+
+        this.cards[2].category = "Nemsokára kezdődik";
+        this.cards[2].title = this.closestEvent.title;
+        this.cards[2].description = this.closestEvent.description
+        this.cards[2].location = this.closestEvent.location;
+        this.cards[2].place = this.closestEvent.place;
+        this.cards[2].participants = this.closestEvent.participants;
+        this.cards[2].date = this.closestEvent.date;
+        this.cards[2].time = this.closestEvent.time;
+        axios.get(`/api/users/${this.closestEvent.creatorId}`).then(response => {
+          this.cards[2].creatorName = response.data.username;
         })
       } catch (error) {
         console.error("Error fetching most participants event:", error);
