@@ -1,29 +1,33 @@
 <template>
-  <div class="card-container">
-    <q-card v-for="(card, index) in cards" :key="index" style="min-width: 500px; min-height: 100px">
-      <q-card-section>
-        <div>
-          <h1 class="text-h4 q-mb-md text-center">{{ card.category }}</h1>
-          <h2 class="text-h6 q-mb-md text-center">{{ card.title }}</h2>
-          <p class="text-body2 q-mb-md">{{ card.description }}</p>
-          <div class="q-mb-md">
-            <strong>Helyszín:</strong> {{ card.location }},
-            {{ card.place }}
-          </div>
-          <div class="q-mb-md">
-            <strong>Résztvevők:</strong> {{ card.participants }} fő
-          </div>
-          <div class="q-mb-md">
-            <strong>Időpont:</strong> {{ card.date }},
-            {{ card.time }}
-          </div>
-          <div class="q-mb-md">
-            <strong>Szervező:</strong> {{ card.creatorName }}
-          </div>
-        </div>
-      </q-card-section>
-    </q-card>
+  <div class="loading-container" v-if="loading">
+    <div class="loading-spinner"></div>
   </div>
+
+  <div class="card-container" v-if="!loading">
+      <q-card v-for="(card, index) in cards" :key="index" style="min-width: 500px; min-height: 100px">
+        <q-card-section>
+          <div>
+            <h1 class="text-h4 q-mb-md text-center">{{ card.category }}</h1>
+            <h2 class="text-h6 q-mb-md text-center">{{ card.title }}</h2>
+            <p class="text-body2 q-mb-md">{{ card.description }}</p>
+            <div class="q-mb-md">
+              <strong>Helyszín:</strong> {{ card.location }},
+              {{ card.place }}
+            </div>
+            <div class="q-mb-md">
+              <strong>Résztvevők:</strong> {{ card.participants }} fő
+            </div>
+            <div class="q-mb-md">
+              <strong>Időpont:</strong> {{ card.date }},
+              {{ card.time }}
+            </div>
+            <div class="q-mb-md">
+              <strong>Szervező:</strong> {{ card.creatorName }}
+            </div>
+          </div>
+        </q-card-section>
+      </q-card>
+    </div>
 
 </template>
 
@@ -72,13 +76,12 @@ export default defineComponent({
           time: "",
           creatorName: "",
         },
-      ]
+      ],
+      loading: true,
     }
   },
   mounted() {
-    this.getEventWithMostParticipants();
-    this.getLatestEvent();
-    this.getClosestEvent();
+      this.fetchEventData();
   },
   methods: {
     async getEventWithMostParticipants() {
@@ -141,7 +144,22 @@ export default defineComponent({
         console.error("Error fetching most participants event:", error);
       }
     },
-  }
+    async fetchEventData() {
+      try {
+        await new Promise(resolve => setTimeout(resolve, 100));
+
+        await Promise.all([
+          this.getEventWithMostParticipants(),
+          this.getLatestEvent(),
+          this.getClosestEvent(),
+        ]);
+
+        this.loading = false;
+      } catch (error) {
+        console.error("Error fetching event data:", error);
+      }
+    },
+  },
 });
 </script>
 
@@ -150,5 +168,31 @@ export default defineComponent({
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 20px;
+}
+.loading-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.loading-spinner {
+  border: 8px solid #f3f3f3;
+  border-top: 8px solid #8BC34A;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 </style>
