@@ -3,36 +3,42 @@
     <div class="loading-spinner"></div>
   </div>
 
-  <div class="card-container" v-if="!loading">
-      <q-card v-for="(card, index) in cards" :key="index" style="min-width: 500px; min-height: 100px">
-        <q-card-section>
-          <div>
-            <h1 class="text-h4 q-mb-md text-center">{{ card.category }}</h1>
-            <h2 class="text-h6 q-mb-md text-center">{{ card.title }}</h2>
-            <p class="text-body2 q-mb-md">{{ card.description }}</p>
-            <div class="q-mb-md">
-              <strong>Helyszín:</strong> {{ card.location }},
-              {{ card.place }}
+  <div v-if="user">
+    <div class="card-container" v-if="!loading">
+        <q-card v-for="(card, index) in cards" :key="index" style="min-width: 500px; min-height: 100px">
+          <q-card-section>
+            <div>
+              <h1 class="text-h4 q-mb-md text-center">{{ card.category }}</h1>
+              <h2 class="text-h6 q-mb-md text-center">{{ card.title }}</h2>
+              <p class="text-body2 q-mb-md">{{ card.description }}</p>
+              <div class="q-mb-md">
+                <strong>Helyszín:</strong> {{ card.location }},
+                {{ card.place }}
+              </div>
+              <div class="q-mb-md">
+                <strong>Résztvevők:</strong> {{ card.participants }} fő
+              </div>
+              <div class="q-mb-md">
+                <strong>Időpont:</strong> {{ card.date }},
+                {{ card.time }}
+              </div>
+              <div class="q-mb-md">
+                <strong>Szervező:</strong> {{ card.creatorName }}
+              </div>
             </div>
-            <div class="q-mb-md">
-              <strong>Résztvevők:</strong> {{ card.participants }} fő
-            </div>
-            <div class="q-mb-md">
-              <strong>Időpont:</strong> {{ card.date }},
-              {{ card.time }}
-            </div>
-            <div class="q-mb-md">
-              <strong>Szervező:</strong> {{ card.creatorName }}
-            </div>
-          </div>
-        </q-card-section>
-      </q-card>
-    </div>
+          </q-card-section>
+        </q-card>
+      </div>
+  </div>
+  <div v-else>
+    <h1>user not logged in</h1>
+  </div>
 
 </template>
 
 <script>
 import axios from "axios";
+import Cookies from "js-cookie";
 import { defineComponent } from "vue";
 
 export default defineComponent({
@@ -78,10 +84,13 @@ export default defineComponent({
         },
       ],
       loading: true,
+      user: null,
     }
   },
   mounted() {
       this.fetchEventData();
+      const storedUser = Cookies.get("user");
+      this.user = storedUser ? JSON.parse(storedUser) : null;
   },
   methods: {
     async getEventWithMostParticipants() {
