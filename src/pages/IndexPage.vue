@@ -4,7 +4,7 @@
   </div>
 
   <div v-if="user">
-    <div class="card-container" v-if="!loading">
+    <div class="card-container" v-if="!loading && cards[0].title">
         <q-card v-for="(card, index) in cards" :key="index" style="min-width: 500px; min-height: 100px">
           <q-card-section>
             <div>
@@ -28,6 +28,9 @@
             </div>
           </q-card-section>
         </q-card>
+      </div>
+      <div v-else>
+        <h1>no event</h1>
       </div>
   </div>
   <div v-else>
