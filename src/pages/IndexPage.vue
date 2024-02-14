@@ -29,9 +29,6 @@
           </q-card-section>
         </q-card>
       </div>
-      <div v-else>
-        <h1>no event</h1>
-      </div>
   </div>
   <div v-else>
     <h1>user not logged in</h1>
