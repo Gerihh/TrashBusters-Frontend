@@ -51,10 +51,24 @@
           <q-separator inset class="q-my-sm" />
 
           <q-item class="GNL__drawer-item justify-center">
-            <q-btn class="q-justify-center" label="Kijelentkezés" color="red" @click="logout"/>
+            <q-btn class="q-justify-center" label="Kijelentkezés" color="red" @click="showLogouteConfirmation()"/>
           </q-item>
         </q-list>
     </q-drawer>
+
+    <q-dialog v-model="logoutConfirmationVisible">
+    <q-card>
+      <q-card-section class="text-h6">
+        Biztosan szeretne kijelentkezni?
+      </q-card-section>
+      <q-card-actions align="right">
+        <q-btn label="Nem" color="grey" @click="cancelLogout()" />
+        <q-space/>
+        <q-btn label="Igen" color="red" @click="confirmLogout()" />
+      </q-card-actions>
+    </q-card>
+  </q-dialog>
+
     <q-page-container>
       <router-view></router-view>
     </q-page-container>
@@ -69,6 +83,7 @@ export default {
   data() {
     return {
       user: null,
+      logoutConfirmationVisible: false,
     };
   },
   mounted() {
@@ -76,13 +91,25 @@ export default {
     this.user = storedUser ? JSON.parse(storedUser) : null;
   },
   methods: {
-    logout() {
+  async showLogouteConfirmation() {
+      // Open the confirmation dialog
+      this.logoutConfirmationVisible = true;
+    },
+    async cancelLogout() {
+      // Close the confirmation dialog and perform any necessary actions
+      this.logoutConfirmationVisible = false;
+    },
+    async confirmLogout() {
       useAuth.isLoggedIn.value = false;
       Cookies.remove('token', {path: '/'});
       Cookies.remove('user', {path: '/'});
       this.user = null;
       this.$router.push('/login');
-    }
+    },
+    async logoutProfile() {
+      // Show the confirmation dialog when the button is clicked
+      this.showLogouteConfirmation();
+    },
   }
 };
 </script>
