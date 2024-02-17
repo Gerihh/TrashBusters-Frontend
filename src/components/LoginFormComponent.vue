@@ -65,23 +65,33 @@ export default {
           password: this.password,
         });
 
-        //Token és User elmentése
-        //localStorage.setItem('token', response.data.accessToken);
-        //localStorage.setItem('user', JSON.stringify(response.data.user));
-        document.cookie = `token=${response.data.accessToken}; path=/;`;
-        const userJson = JSON.stringify(response.data.user);
-        document.cookie = `user=${userJson}; path=/;`;
+        if (response.data.user.isVerified) {
+          document.cookie = `token=${response.data.accessToken}; path=/;`;
+          const userJson = JSON.stringify(response.data.user);
+          document.cookie = `user=${userJson}; path=/;`;
 
-        useAuth.isLoggedIn.value = true;
+          useAuth.isLoggedIn.value = true;
 
-        this.$router.push("/");
-        console.log("Sikeres bejelentkezés");
+          this.$router.push("/");
+          console.log("Sikeres bejelentkezés");
+        }
+
+
+
       } catch (error) {
-        console.error("Hibás bejelentkezés:", error);
-        window.alert("Hibás adatok!");
-        this.email = "";
-        this.password = "";
+        if (!error.response.data.user.isVerified) {
+          window.alert("Még nem erősítette meg a felhasználóját!");
+        }
+        else {
+          console.log(error);
+          window.alert("Hibás email cím vagy jelszó!");
+
+          this.email = "";
+          this.password = "";
+        }
+
       }
+
     },
   },
 };
