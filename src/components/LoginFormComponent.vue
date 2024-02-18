@@ -57,7 +57,7 @@ export default {
       password: "",
     };
   },
-  methods: {
+ methods: {
     async login() {
       try {
         const response = await axios.post("/api/auth/login", {
@@ -75,8 +75,6 @@ export default {
           this.$router.push("/");
           console.log("Sikeres bejelentkezés");
         }
-
-
 
       } catch (error) {
         try {
