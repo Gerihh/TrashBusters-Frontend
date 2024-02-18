@@ -24,6 +24,10 @@ const routes = [
         component: () => import("pages/UsersPage.vue"),
       },
       {
+        path: "dumps",
+        component: () => import("pages/DumpsPage.vue"),
+      },
+      {
         path: "user/:id",
         component: () => import("pages/SearchedUserPage.vue"),
       },

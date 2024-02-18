@@ -93,6 +93,7 @@ export default {
           this.email = "";
           this.username = "";
           this.password = "";
+          this.passwordAgain = "";
         }
       } else {
         alert("A jelszavak nem egyeznek!");

@@ -1,5 +1,9 @@
 <template>
-  <div class="q-ma-lg row justify-center" v-if="user">
+  <div class="loading-container" v-if="loading">
+    <div class="loading-spinner"></div>
+  </div>
+
+  <div class="q-ma-lg row justify-center" v-if="user && !loading">
     <q-card class="my-card" flat style="background-color: #fafafa; max-width: 300px;" >
       <img :src="user.profilePictureURL" alt="Profilkép" style="border-radius: 50%" />
       <q-card-section class="">
@@ -10,7 +14,7 @@
     </q-card>
   </div>
 
-  <div>
+  <div v-if="!loading">
     <div class="q-mt-md q-ma-lg" v-if="eventsCreatedByUser.length > 0">
       <q-table
         :rows="eventsCreatedByUser"
@@ -135,14 +139,14 @@ export default defineComponent({
       creatorName: null,
       userId: "",
       openedFromCreator: false,
+      loading: true,
     };
   },
   mounted() {
     const storedUser = Cookies.get("user");
     this.user = storedUser ? JSON.parse(storedUser) : null;
 
-    this.getEventsCreatedByUser();
-    this.getEventsJoinedByUser();
+      this.fetchEventData();
   },
   methods: {
     async getEventsCreatedByUser() {
@@ -225,6 +229,49 @@ export default defineComponent({
         participants: this.selectedRow.participants - 1,
       });
     },
+    async fetchEventData() {
+      try {
+        await new Promise(resolve => setTimeout(resolve, 100));
+
+        await Promise.all([
+          this.getEventsCreatedByUser(),
+          this.getEventsJoinedByUser(),
+        ]);
+
+        this.loading = false;
+      } catch (error) {
+        console.error("Error fetching event data:", error);
+      }
+    },
   },
 });
 </script>
+
+<style>
+  .loading-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.loading-spinner {
+  border: 8px solid #f3f3f3;
+  border-top: 8px solid #8BC34A;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+</style>

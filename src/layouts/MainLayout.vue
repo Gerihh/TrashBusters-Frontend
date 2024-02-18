@@ -33,25 +33,13 @@ export default {
               <q-tabs v-model="tab" shrink>
                 <q-route-tab v-if="useAuth.isLoggedIn.value" label="Felhasználók" to="/users"/>
                 <q-route-tab v-if="useAuth.isLoggedIn.value" label="Események" to="/events"/>
+                <q-route-tab v-if="useAuth.isLoggedIn.value" label="Felhasználók" to="/users"/>
+                <q-route-tab v-if="useAuth.isLoggedIn.value" label="Lerakók" to="/dumps"/>
                 <q-route-tab v-if="!useAuth.isLoggedIn.value" label="Regisztráció / Bejelentkezés" to="/register"/>
-                <q-btn v-else flat icon="person" @click="toggleDrawer = !toggleDrawer"/>
+                <q-route-tab v-else flat icon="person" to="/profile/personal"/>
               </q-tabs>
             </q-toolbar>
           </q-header>
-      <q-drawer v-model="toggleDrawer" elevated side="right">
-      <q-tabs inline-tabs vertical>
-        <q-route-tab to="/profile/personal" label="Profil" @click="toggleDrawer = !toggleDrawer" />
-        <q-route-tab
-          href="https://vuejs.org/"
-          label="Vue.JS"
-          no-caps
-          target="_blank"
-        />
-        <q-item class="justify-center">
-          <q-btn label="Kijelentkezés" color="red" @click="logout"/>
-        </q-item>
-        </q-tabs>
-      </q-drawer>
     </div>
     <q-page-container>
       <router-view></router-view>
