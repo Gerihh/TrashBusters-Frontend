@@ -79,17 +79,17 @@ export default {
 
 
       } catch (error) {
-        if (!error.response.data.user.isVerified) {
+        try {
+          if (!error.response.data.user.isVerified) {
           window.alert("Még nem erősítette meg a felhasználóját!");
         }
-        else {
+        } catch (error) {
           console.log(error);
           window.alert("Hibás email cím vagy jelszó!");
 
           this.email = "";
           this.password = "";
         }
-
       }
 
     },
