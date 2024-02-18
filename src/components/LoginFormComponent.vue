@@ -57,7 +57,7 @@ export default {
       password: "",
     };
   },
-  methods: {
+ methods: {
     async login() {
       try {
         const response = await axios.post("/api/auth/login", {
