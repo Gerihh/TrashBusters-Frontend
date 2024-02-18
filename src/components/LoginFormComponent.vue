@@ -76,8 +76,6 @@ export default {
           console.log("Sikeres bejelentkezés");
         }
 
-
-
       } catch (error) {
         try {
           if (!error.response.data.user.isVerified) {
