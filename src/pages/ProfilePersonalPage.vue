@@ -25,6 +25,12 @@
         title="Szervező vagyok"
       />
     </div>
+    <div class="q-mt-md q-ma-lg" v-else>
+      <q-table
+        title="Szervező vagyok"
+        no-data-label="Jelenleg nem szervez egyetlen eseményt sem"
+      />
+    </div>
 
     <div class="q-mt-md q-ma-lg" v-if="eventsJoinedByUser.length > 0">
       <q-table
@@ -34,6 +40,13 @@
         @row-click="openCardParticipant"
         :rows-per-page-options="[5]"
         title="Résztvevő vagyok"
+        no-data-label="Jelenleg nem vesz részt egyetlen eseményen sem"
+      />
+    </div>
+    <div class="q-mt-md q-ma-lg" v-else>
+      <q-table
+        title="Résztvevő vagyok"
+        no-data-label="Jelenleg nem vesz részt egyetlen eseményen sem"
       />
     </div>
   </div>
