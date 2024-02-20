@@ -9,6 +9,7 @@ export default {
     return {
       useAuth,
       toggleDrawer,
+      tab: null,
     };
   },
   methods: {
