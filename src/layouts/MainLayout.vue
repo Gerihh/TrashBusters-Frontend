@@ -31,7 +31,6 @@ export default {
               <q-btn flat label="Főoldal" to="/" />
               <q-space />
               <q-tabs v-model="tab" shrink>
-                <q-route-tab v-if="useAuth.isLoggedIn.value" label="Felhasználók" to="/users"/>
                 <q-route-tab v-if="useAuth.isLoggedIn.value" label="Események" to="/events"/>
                 <q-route-tab v-if="useAuth.isLoggedIn.value" label="Felhasználók" to="/users"/>
                 <q-route-tab v-if="useAuth.isLoggedIn.value" label="Lerakók" to="/dumps"/>

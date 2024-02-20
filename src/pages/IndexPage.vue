@@ -1,33 +1,35 @@
 <template>
-  <div class="loading-container" v-if="loading">
-    <div class="loading-spinner"></div>
-  </div>
-
   <div v-if="user">
+    <div class="loading-container" v-if="loading">
+      <div class="loading-spinner"></div>
+    </div>
     <div class="card-container" v-if="!loading && cards[0].title">
-        <q-card v-for="(card, index) in cards" :key="index" style="min-width: 500px; min-height: 100px">
-          <q-card-section>
-            <div>
-              <h1 class="text-h4 q-mb-md text-center">{{ card.category }}</h1>
-              <h2 class="text-h6 q-mb-md text-center">{{ card.title }}</h2>
-              <p class="text-body2 q-mb-md">{{ card.description }}</p>
-              <div class="q-mb-md">
-                <strong>Helyszín:</strong> {{ card.location }},
-                {{ card.place }}
+          <q-card v-for="(card, index) in cards" :key="index" style="min-width: 500px; min-height: 100px">
+            <q-card-section>
+              <div>
+                <h1 class="text-h4 q-mb-md text-center">{{ card.category }}</h1>
+                <h2 class="text-h6 q-mb-md text-center">{{ card.title }}</h2>
+                <p class="text-body2 q-mb-md">{{ card.description }}</p>
+                <div class="q-mb-md">
+                  <strong>Helyszín:</strong> {{ card.location }},
+                  {{ card.place }}
+                </div>
+                <div class="q-mb-md">
+                  <strong>Résztvevők:</strong> {{ card.participants }} fő
+                </div>
+                <div class="q-mb-md">
+                  <strong>Időpont:</strong> {{ card.date }},
+                  {{ card.time }}
+                </div>
+                <div class="q-mb-md">
+                  <strong>Szervező:</strong> {{ card.creatorName }}
+                </div>
               </div>
-              <div class="q-mb-md">
-                <strong>Résztvevők:</strong> {{ card.participants }} fő
-              </div>
-              <div class="q-mb-md">
-                <strong>Időpont:</strong> {{ card.date }},
-                {{ card.time }}
-              </div>
-              <div class="q-mb-md">
-                <strong>Szervező:</strong> {{ card.creatorName }}
-              </div>
-            </div>
-          </q-card-section>
-        </q-card>
+            </q-card-section>
+          </q-card>
+      </div>
+      <div v-else-if="!loading &&!cards[0].title">
+        <h1>no events</h1>
       </div>
   </div>
   <div v-else>
