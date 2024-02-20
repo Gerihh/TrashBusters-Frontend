@@ -57,7 +57,7 @@ export default {
       password: "",
     };
   },
- methods: {
+  methods: {
     async login() {
       try {
         const response = await axios.post("/api/auth/login", {
@@ -75,12 +75,11 @@ export default {
           this.$router.push("/");
           console.log("Sikeres bejelentkezés");
         }
-
       } catch (error) {
         try {
           if (!error.response.data.user.isVerified) {
-          window.alert("Még nem erősítette meg a felhasználóját!");
-        }
+            window.alert("Még nem erősítette meg a felhasználóját!");
+          }
         } catch (error) {
           console.log(error);
           window.alert("Hibás email cím vagy jelszó!");
@@ -89,7 +88,6 @@ export default {
           this.password = "";
         }
       }
-
     },
   },
 };

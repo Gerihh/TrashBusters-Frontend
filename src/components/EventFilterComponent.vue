@@ -202,8 +202,7 @@ export default {
     },
     async openCard(event, row, columnIndex) {
       this.selectedRow = row;
-      this.getCreatorName();
-      this.checkPairExists();
+      await Promise.all([this.getCreatorName(), this.checkPairExists()]);
       this.cardVisible = true;
     },
     closeCard() {
@@ -250,14 +249,11 @@ export default {
           `/api/users/${this.selectedRow.creatorId}`
         );
 
-        // Assuming the response.data contains the user data
         const user = response.data;
 
-        // Access the username property
         this.creatorName = user.username;
       } catch (error) {
         console.error("Error fetching creator name:", error);
-        // Handle the error as needed
       }
     },
     async checkPairExists() {

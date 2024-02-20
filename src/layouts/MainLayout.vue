@@ -1,7 +1,7 @@
 <script>
-import { ref } from 'vue';
-import useAuth from 'src/composables/useAuth';
-import Cookies from 'js-cookie'
+import { ref } from "vue";
+import useAuth from "src/composables/useAuth";
+import Cookies from "js-cookie";
 
 export default {
   setup() {
@@ -9,37 +9,53 @@ export default {
     return {
       useAuth,
       toggleDrawer,
+      tab: null,
     };
   },
   methods: {
     logout() {
       this.toggleDrawer = false;
       useAuth.isLoggedIn.value = false;
-      Cookies.remove('token', {path: '/'});
-      Cookies.remove('user', {path: '/'});
+      Cookies.remove("token", { path: "/" });
+      Cookies.remove("user", { path: "/" });
       this.user = null;
-      this.$router.push('/login');
-    }
-  }
+      this.$router.push("/login");
+    },
+  },
 };
 </script>
 <template>
   <q-layout view="hHh Lpr lFf" class="bg-grey-1">
     <div>
-          <q-header elevated class="bg-light-green text-white">
-            <q-toolbar class="GNL__toolbar">
-              <q-btn flat label="Főoldal" to="/" />
-              <q-space />
-              <q-tabs v-model="tab" shrink>
-                <q-route-tab v-if="useAuth.isLoggedIn.value" label="Felhasználók" to="/users"/>
-                <q-route-tab v-if="useAuth.isLoggedIn.value" label="Események" to="/events"/>
-                <q-route-tab v-if="useAuth.isLoggedIn.value" label="Felhasználók" to="/users"/>
-                <q-route-tab v-if="useAuth.isLoggedIn.value" label="Lerakók" to="/dumps"/>
-                <q-route-tab v-if="!useAuth.isLoggedIn.value" label="Regisztráció / Bejelentkezés" to="/register"/>
-                <q-route-tab v-else flat icon="person" to="/profile/personal"/>
-              </q-tabs>
-            </q-toolbar>
-          </q-header>
+      <q-header elevated class="bg-light-green text-white">
+        <q-toolbar class="GNL__toolbar">
+          <q-btn flat label="Főoldal" to="/" />
+          <q-space />
+          <q-tabs v-model="tab" shrink>
+            <q-route-tab
+              v-if="useAuth.isLoggedIn.value"
+              label="Események"
+              to="/events"
+            />
+            <q-route-tab
+              v-if="useAuth.isLoggedIn.value"
+              label="Felhasználók"
+              to="/users"
+            />
+            <q-route-tab
+              v-if="useAuth.isLoggedIn.value"
+              label="Lerakók"
+              to="/dumps"
+            />
+            <q-route-tab
+              v-if="!useAuth.isLoggedIn.value"
+              label="Regisztráció / Bejelentkezés"
+              to="/register"
+            />
+            <q-route-tab v-else flat icon="person" to="/profile/personal" />
+          </q-tabs>
+        </q-toolbar>
+      </q-header>
     </div>
     <q-page-container>
       <router-view></router-view>

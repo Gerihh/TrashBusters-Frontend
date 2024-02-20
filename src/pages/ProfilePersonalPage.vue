@@ -4,8 +4,16 @@
   </div>
 
   <div class="q-ma-lg row justify-center" v-if="user && !loading">
-    <q-card class="my-card" flat style="background-color: #fafafa; max-width: 300px;" >
-      <img :src="user.profilePictureURL" alt="Profilkép" style="border-radius: 50%" />
+    <q-card
+      class="my-card"
+      flat
+      style="background-color: #fafafa; max-width: 300px"
+    >
+      <img
+        :src="user.profilePictureURL"
+        alt="Profilkép"
+        style="border-radius: 50%"
+      />
       <q-card-section class="">
         <div class="text-h6 text-center">
           {{ user.username }} #{{ user.id }}
@@ -25,6 +33,12 @@
         title="Szervező vagyok"
       />
     </div>
+    <div class="q-mt-md q-ma-lg" v-else>
+      <q-table
+        title="Szervező vagyok"
+        no-data-label="Jelenleg nem szervez egyetlen eseményt sem"
+      />
+    </div>
 
     <div class="q-mt-md q-ma-lg" v-if="eventsJoinedByUser.length > 0">
       <q-table
@@ -34,6 +48,13 @@
         @row-click="openCardParticipant"
         :rows-per-page-options="[5]"
         title="Résztvevő vagyok"
+        no-data-label="Jelenleg nem vesz részt egyetlen eseményen sem"
+      />
+    </div>
+    <div class="q-mt-md q-ma-lg" v-else>
+      <q-table
+        title="Résztvevő vagyok"
+        no-data-label="Jelenleg nem vesz részt egyetlen eseményen sem"
       />
     </div>
   </div>
@@ -146,7 +167,7 @@ export default defineComponent({
     const storedUser = Cookies.get("user");
     this.user = storedUser ? JSON.parse(storedUser) : null;
 
-      this.fetchEventData();
+    this.fetchEventData();
   },
   methods: {
     async getEventsCreatedByUser() {
@@ -231,7 +252,7 @@ export default defineComponent({
     },
     async fetchEventData() {
       try {
-        await new Promise(resolve => setTimeout(resolve, 100));
+        await new Promise((resolve) => setTimeout(resolve, 100));
 
         await Promise.all([
           this.getEventsCreatedByUser(),
@@ -248,7 +269,7 @@ export default defineComponent({
 </script>
 
 <style>
-  .loading-container {
+.loading-container {
   position: fixed;
   top: 0;
   left: 0;
@@ -263,7 +284,7 @@ export default defineComponent({
 
 .loading-spinner {
   border: 8px solid #f3f3f3;
-  border-top: 8px solid #8BC34A;
+  border-top: 8px solid #8bc34a;
   border-radius: 50%;
   width: 50px;
   height: 50px;
@@ -271,7 +292,11 @@ export default defineComponent({
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 </style>

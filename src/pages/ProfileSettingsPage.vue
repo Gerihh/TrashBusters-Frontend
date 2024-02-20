@@ -15,7 +15,7 @@
       </q-card-section>
       <q-card-actions align="right">
         <q-btn label="Nem" color="grey" @click="cancelDelete" />
-        <q-space/>
+        <q-space />
         <q-btn label="Igen" color="red" @click="confirmDelete" />
       </q-card-actions>
     </q-card>

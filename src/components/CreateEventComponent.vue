@@ -123,8 +123,8 @@ export default {
         const requestData = {
           title: this.title,
           description: this.description,
-          location: this.location,
-          place: this.place,
+          location: typeof this.location === "string" ? this.location : "",
+          place: typeof this.place === "string" ? this.place : "",
           date: this.date,
           time: this.time,
           participants: this.participants + 1,
