@@ -2,14 +2,7 @@
   <q-layout view="hHh Lpr lFf" class="bg-grey-1">
     <q-header elevated class="bg-light-green text-white">
       <q-toolbar class="GNL__toolbar">
-        <q-btn
-          flat
-          dense
-          round
-          to="/"
-          icon="home"
-          class="q-mr-sm"
-        />
+        <q-btn flat dense round to="/" icon="home" class="q-mr-sm" />
         <q-toolbar-title shrink class="row items-center no-wrap">
           <span class="q-ml-sm" v-if="user">{{ user.username }}</span>
         </q-toolbar-title>
@@ -18,56 +11,55 @@
       </q-toolbar>
     </q-header>
 
-    <q-drawer
-      show-if-above
-      bordered
-      class="bg-white"
-      :width="280"
-    >
+    <q-drawer show-if-above bordered class="bg-white" :width="280">
+      <q-list padding class="text-grey-8">
+        <q-item class="GNL__drawer-item" clickable to="/profile/personal">
+          <q-item-section avatar />
+          <q-item-section>
+            <q-item-label>Eseményeim</q-item-label>
+          </q-item-section>
+        </q-item>
+        <q-separator inset class="q-my-sm" />
 
-        <q-list padding class="text-grey-8">
-          <q-item class="GNL__drawer-item" clickable to="/profile/personal">
-            <q-item-section avatar/>
-            <q-item-section>
-              <q-item-label>Eseményeim</q-item-label>
-            </q-item-section>
-          </q-item>
-          <q-separator inset class="q-my-sm" />
+        <q-item class="GNL__drawer-item" clickable to="/profile/settings">
+          <q-item-section avatar />
+          <q-item-section>
+            <q-item-label>Beállítások</q-item-label>
+          </q-item-section>
+        </q-item>
+        <q-separator inset class="q-my-sm" />
 
-          <q-item class="GNL__drawer-item" clickable to="/profile/settings">
-            <q-item-section avatar/>
-            <q-item-section>
-              <q-item-label>Beállítások</q-item-label>
-            </q-item-section>
-          </q-item>
-          <q-separator inset class="q-my-sm" />
+        <q-item class="GNL__drawer-item" clickable to="/profile/events">
+          <q-item-section avatar />
+          <q-item-section>
+            <q-item-label>Esemény készítés</q-item-label>
+          </q-item-section>
+        </q-item>
+        <q-separator inset class="q-my-sm" />
 
-          <q-item class="GNL__drawer-item" clickable to="/profile/events">
-            <q-item-section avatar/>
-            <q-item-section>
-              <q-item-label>Esemény készítés</q-item-label>
-            </q-item-section>
-          </q-item>
-          <q-separator inset class="q-my-sm" />
-
-          <q-item class="GNL__drawer-item justify-center">
-            <q-btn class="q-justify-center" label="Kijelentkezés" color="red" @click="showLogouteConfirmation()"/>
-          </q-item>
-        </q-list>
+        <q-item class="GNL__drawer-item justify-center">
+          <q-btn
+            class="q-justify-center"
+            label="Kijelentkezés"
+            color="red"
+            @click="showLogouteConfirmation()"
+          />
+        </q-item>
+      </q-list>
     </q-drawer>
 
     <q-dialog v-model="logoutConfirmationVisible">
-    <q-card>
-      <q-card-section class="text-h6">
-        Biztosan szeretne kijelentkezni?
-      </q-card-section>
-      <q-card-actions align="right">
-        <q-btn label="Nem" color="grey" @click="cancelLogout()" />
-        <q-space/>
-        <q-btn label="Igen" color="red" @click="confirmLogout()" />
-      </q-card-actions>
-    </q-card>
-  </q-dialog>
+      <q-card>
+        <q-card-section class="text-h6">
+          Biztosan szeretne kijelentkezni?
+        </q-card-section>
+        <q-card-actions align="right">
+          <q-btn label="Nem" color="grey" @click="cancelLogout()" />
+          <q-space />
+          <q-btn label="Igen" color="red" @click="confirmLogout()" />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
 
     <q-page-container>
       <router-view></router-view>
@@ -76,8 +68,8 @@
 </template>
 
 <script>
-import useAuth from 'src/composables/useAuth';
-import Cookies from 'js-cookie';
+import useAuth from "src/composables/useAuth";
+import Cookies from "js-cookie";
 
 export default {
   data() {
@@ -87,11 +79,11 @@ export default {
     };
   },
   mounted() {
-    const storedUser = Cookies.get('user')
+    const storedUser = Cookies.get("user");
     this.user = storedUser ? JSON.parse(storedUser) : null;
   },
   methods: {
-  async showLogouteConfirmation() {
+    async showLogouteConfirmation() {
       // Open the confirmation dialog
       this.logoutConfirmationVisible = true;
     },
@@ -101,16 +93,16 @@ export default {
     },
     async confirmLogout() {
       useAuth.isLoggedIn.value = false;
-      Cookies.remove('token', {path: '/'});
-      Cookies.remove('user', {path: '/'});
+      Cookies.remove("token", { path: "/" });
+      Cookies.remove("user", { path: "/" });
       this.user = null;
-      this.$router.push('/login');
+      this.$router.push("/login");
     },
     async logoutProfile() {
       // Show the confirmation dialog when the button is clicked
       this.showLogouteConfirmation();
     },
-  }
+  },
 };
 </script>
 <style lang="sass">

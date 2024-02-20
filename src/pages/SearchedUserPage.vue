@@ -3,19 +3,27 @@
     <div class="loading-spinner"></div>
   </div>
 
-   <div v-if="!loading">
-     <div class="q-ma-lg row justify-center" v-if="user && !loading">
-      <q-card class="my-card" flat style="background-color: #fafafa; max-width: 300px;" >
-        <img :src="user.profilePictureURL" alt="Profilkép" style="border-radius: 50%" />
+  <div v-if="!loading">
+    <div class="q-ma-lg row justify-center" v-if="user && !loading">
+      <q-card
+        class="my-card"
+        flat
+        style="background-color: #fafafa; max-width: 300px"
+      >
+        <img
+          :src="user.profilePictureURL"
+          alt="Profilkép"
+          style="border-radius: 50%"
+        />
         <q-card-section class="">
           <div class="text-h6 text-center">
             {{ user.username }} #{{ user.id }}
           </div>
         </q-card-section>
       </q-card>
-       </div>
+    </div>
 
-       <div v-if="!loading">
+    <div v-if="!loading">
       <div class="q-mt-md q-ma-lg" v-if="eventsCreatedByUser.length > 0">
         <q-table
           :rows="eventsCreatedByUser"
@@ -36,9 +44,9 @@
           title="Résztvevő"
         />
       </div>
-       </div>
+    </div>
 
-       <q-dialog v-model="cardVisible">
+    <q-dialog v-model="cardVisible">
       <q-card style="min-width: 500px; min-height: 100px">
         <q-card-section>
           <div v-if="selectedRow">
@@ -69,9 +77,8 @@
           />
         </q-card-actions>
       </q-card>
-       </q-dialog>
-   </div>
-
+    </q-dialog>
+  </div>
 </template>
 
 <script>
@@ -79,15 +86,15 @@ import axios from "axios";
 import { defineComponent } from "vue";
 
 export default defineComponent({
-    name: "SearchedUserPage",
+  name: "SearchedUserPage",
 
-    data() {
-      return {
-        user: null,
-        userId: null,
-        username: null,
-        profilePictureURL: null,
-        eventsCreatedByUser: [],
+  data() {
+    return {
+      user: null,
+      userId: null,
+      username: null,
+      profilePictureURL: null,
+      eventsCreatedByUser: [],
       eventsJoinedByUser: [],
       columns: [
         {
@@ -127,25 +134,25 @@ export default defineComponent({
       selectedRow: null,
       creatorName: null,
       loading: true,
-      };
-    },
-    mounted() {
-      this.userId = this.$route.params.id;
+    };
+  },
+  mounted() {
+    this.userId = this.$route.params.id;
 
-      this.getUserById();
+    this.getUserById();
 
-      this.fetchEventData();
+    this.fetchEventData();
+  },
+  methods: {
+    async getUserById() {
+      try {
+        const response = await axios.get(`/api/users/${this.userId}`);
+        this.user = response.data;
+      } catch (error) {
+        console.error("Error fetching user by id:", error);
+      }
     },
-    methods: {
-      async getUserById() {
-        try {
-          const response = await axios.get(`/api/users/${this.userId}`);
-          this.user = response.data;
-        } catch (error) {
-          console.error("Error fetching user by id:", error);
-        }
-      },
-      async getEventsCreatedByUser() {
+    async getEventsCreatedByUser() {
       try {
         const response = await axios.get(`/api/events/creator/${this.userId}`);
         this.eventsCreatedByUser = response.data;
@@ -155,7 +162,8 @@ export default defineComponent({
     },
     async getEventsJoinedByUser() {
       try {
-        const response = await axios.get(`/api/participants/events/joined/${this.userId}`
+        const response = await axios.get(
+          `/api/participants/events/joined/${this.userId}`
         );
         this.eventsJoinedByUser = response.data;
       } catch (error) {
@@ -190,11 +198,11 @@ export default defineComponent({
     },
     async fetchEventData() {
       try {
-        await new Promise(resolve => setTimeout(resolve, 100));
+        await new Promise((resolve) => setTimeout(resolve, 100));
 
         await Promise.all([
-            this.getEventsCreatedByUser(),
-            this.getEventsJoinedByUser(),
+          this.getEventsCreatedByUser(),
+          this.getEventsJoinedByUser(),
         ]);
 
         this.loading = false;
@@ -202,12 +210,12 @@ export default defineComponent({
         console.error("Error fetching event data:", error);
       }
     },
-    }
+  },
 });
 </script>
 
 <style>
-  .loading-container {
+.loading-container {
   position: fixed;
   top: 0;
   left: 0;
@@ -222,7 +230,7 @@ export default defineComponent({
 
 .loading-spinner {
   border: 8px solid #f3f3f3;
-  border-top: 8px solid #8BC34A;
+  border-top: 8px solid #8bc34a;
   border-radius: 50%;
   width: 50px;
   height: 50px;
@@ -230,7 +238,11 @@ export default defineComponent({
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 </style>

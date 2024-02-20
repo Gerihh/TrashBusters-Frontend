@@ -1,11 +1,6 @@
 <template>
-<div class="absolute-center">
-    <q-card
-      square
-      bordered
-      class="q-pa-md shadow-1"
-      style="width: 300px;"
-    >
+  <div class="absolute-center">
+    <q-card square bordered class="q-pa-md shadow-1" style="width: 300px">
       <q-form class="q-gutter-md">
         <q-input
           square
@@ -35,34 +30,36 @@ import axios from "axios";
 import { defineComponent } from "vue";
 
 export default defineComponent({
-    name: "UsersPage",
+  name: "UsersPage",
 
-    data() {
-      return {
-        searchInput: "",
-        foundUser: null,
-      };
-    },
-    methods: {
-      async searchUser() {
-        try {
-          if (this.searchInput.startsWith("#")) {
-          const cleanedInput = this.searchInput ? this.searchInput.substring(1) : this.searchInput;
+  data() {
+    return {
+      searchInput: "",
+      foundUser: null,
+    };
+  },
+  methods: {
+    async searchUser() {
+      try {
+        if (this.searchInput.startsWith("#")) {
+          const cleanedInput = this.searchInput
+            ? this.searchInput.substring(1)
+            : this.searchInput;
           const response = await axios.get(`/api/users/${cleanedInput}`);
           this.foundUser = response.data;
 
-          this.$router.push(`/user/${this.foundUser.id}`);;
-          } else {
-            alert("A megadott azonosító nem megfelelő formátumú!");
-            this.searchInput = "";
-          }
-        } catch (error) {
-          alert("Nincs felhasználó ilyen azonosítóval!");
-          console.error("Error fetching user by id:", error);
+          this.$router.push(`/user/${this.foundUser.id}`);
+        } else {
+          alert("A megadott azonosító nem megfelelő formátumú!");
           this.searchInput = "";
-          this.foundUser = null;
         }
+      } catch (error) {
+        alert("Nincs felhasználó ilyen azonosítóval!");
+        console.error("Error fetching user by id:", error);
+        this.searchInput = "";
+        this.foundUser = null;
       }
-    }
+    },
+  },
 });
 </script>

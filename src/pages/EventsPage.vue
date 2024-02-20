@@ -1,13 +1,13 @@
 <template>
-<EventFilterComponent/>
+  <EventFilterComponent />
 </template>
 
 <script>
 import EventFilterComponent from "../components/EventFilterComponent.vue";
-import { defineComponent } from 'vue';
+import { defineComponent } from "vue";
 
-export default defineComponent ({
+export default defineComponent({
   name: "EventsPage",
-  components: { EventFilterComponent }
+  components: { EventFilterComponent },
 });
 </script>

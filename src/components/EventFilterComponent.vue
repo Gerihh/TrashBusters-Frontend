@@ -202,10 +202,7 @@ export default {
     },
     async openCard(event, row, columnIndex) {
       this.selectedRow = row;
-      await Promise.all([
-        this.getCreatorName(),
-        this.checkPairExists(),
-      ]);
+      await Promise.all([this.getCreatorName(), this.checkPairExists()]);
       this.cardVisible = true;
     },
     closeCard() {
