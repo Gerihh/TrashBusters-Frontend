@@ -40,7 +40,7 @@
       />
     </div>
 
-    <div class="q-mt-md q-ma-lg" v-if="eventsJoinedByUser.length > 0">
+    <div class="q-mt-md q-ma-lg"  v-if="eventsJoinedByUser.length > 0">
       <q-table
         :rows="eventsJoinedByUser"
         :columns="columns"
@@ -60,7 +60,7 @@
   </div>
 
   <q-dialog v-model="cardVisible">
-    <q-card style="min-width: 90vw; min-height: 60vh; max-width: 500px; max-height: 400px;">
+    <q-card class="q-ma-md" style="min-width: 200px; max-width: 400px; width: 100%;">
       <q-card-section>
         <div v-if="selectedRow">
           <h2 class="text-h6 q-mb-md text-center">{{ selectedRow.title }}</h2>

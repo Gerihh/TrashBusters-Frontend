@@ -11,7 +11,7 @@
       </q-toolbar>
     </q-header>
 
-    <q-drawer show-if-above v-model="drawerOpen" :breakpoint="drawerBreakpoint" bordered class="bg-white" :width="drawerWidth" style="min-width: 300px;">
+    <q-drawer v-if="user" :breakpoint="drawerBreakpoint" bordered class="bg-white" :width="drawerWidth" style="min-width: 300px;">
       <q-list padding class="text-grey-8">
         <q-item class="GNL__drawer-item" clickable to="/profile/personal">
           <q-item-section avatar />
@@ -61,7 +61,7 @@
       </q-card>
     </q-dialog>
 
-    <q-page-container :style="{ marginLeft: drawerOpen ? drawerWidth : 0 }">
+    <q-page-container>
       <router-view></router-view>
     </q-page-container>
   </q-layout>

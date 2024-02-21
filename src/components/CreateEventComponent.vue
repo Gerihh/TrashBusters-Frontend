@@ -1,6 +1,7 @@
 <template>
   <div class="q-ma-lg">
     <q-btn
+      v-if="!showForm"
       label="Új esemény létrehozása"
       color="green"
       class="q-mb-md q-pa-md"
@@ -8,7 +9,7 @@
     />
   </div>
 
-  <div class="q-gutter-md" v-if="showForm">
+  <div class="q-gutter-md" v-if="showForm" >
     <q-card
       square
       bordered
@@ -139,6 +140,8 @@ export default {
         this.place = "";
         this.date = "";
         this.time = "";
+
+        this.showForm = false;
       } catch (error) {
         console.error("Error creating event:", error);
         alert("Hiba a felvétel során!");
