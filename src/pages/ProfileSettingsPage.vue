@@ -1,10 +1,10 @@
 <template>
-  <div class="q-ma-lg">
+  <div class="q-ma-lg flex justify-center">
     <q-btn
       @click="showDeleteConfirmation"
       label="Profil törlése"
       color="red"
-      style="padding: 10px; width: 250px; margin-left: 550px"
+      class="q-ma-lg"
     />
   </div>
 
@@ -20,9 +20,6 @@
       </q-card-actions>
     </q-card>
   </q-dialog>
-  <div v-if="user">
-    <h1>{{ user.id }}</h1>
-  </div>
 </template>
 
 <script>

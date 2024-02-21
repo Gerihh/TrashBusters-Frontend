@@ -3,7 +3,7 @@
     <div class="loading-spinner"></div>
   </div>
 
-  <div class="q-ma-lg row justify-center" v-if="user && !loading">
+  <div class="q-ma-lg flex justify-center" v-if="user && !loading">
     <q-card
       class="my-card"
       flat
@@ -60,7 +60,7 @@
   </div>
 
   <q-dialog v-model="cardVisible">
-    <q-card style="min-width: 500px; min-height: 100px">
+    <q-card style="min-width: 90vw; min-height: 60vh; max-width: 500px; max-height: 400px;">
       <q-card-section>
         <div v-if="selectedRow">
           <h2 class="text-h6 q-mb-md text-center">{{ selectedRow.title }}</h2>

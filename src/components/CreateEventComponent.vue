@@ -3,19 +3,18 @@
     <q-btn
       label="Új esemény létrehozása"
       color="green"
-      style="padding: 10px; width: 250px; margin-left: 550px"
+      class="q-mb-md q-pa-md"
       @click="showForm = !showForm"
     />
   </div>
 
-  <div class="absolute-center" v-if="showForm">
+  <div class="q-gutter-md" v-if="showForm">
     <q-card
       square
       bordered
       class="q-pa-md shadow-1"
-      style="width: 500px; min-height: 100px"
     >
-      <q-form class="q-gutter-md" @submit.prevent="createEvent">
+      <q-form @submit.prevent="createEvent">
         <q-input
           square
           filled
@@ -76,7 +75,7 @@
             unelevated
             color="green-7"
             size="lg"
-            class="full-width"
+            class="full-width q-mt-md"
             label="Esemény létrehozása"
           />
         </q-card-section>

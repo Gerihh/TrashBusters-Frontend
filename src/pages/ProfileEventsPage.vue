@@ -1,5 +1,7 @@
 <template>
-  <CreateEventComponent />
+  <div class="q-ma-lg flex justify-center">
+    <CreateEventComponent />
+  </div>
 </template>
 
 <script>

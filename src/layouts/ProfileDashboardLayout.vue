@@ -11,7 +11,7 @@
       </q-toolbar>
     </q-header>
 
-    <q-drawer show-if-above bordered class="bg-white" :width="280">
+    <q-drawer show-if-above v-model="drawerOpen" :breakpoint="drawerBreakpoint" bordered class="bg-white" :width="drawerWidth" style="min-width: 300px;">
       <q-list padding class="text-grey-8">
         <q-item class="GNL__drawer-item" clickable to="/profile/personal">
           <q-item-section avatar />
@@ -61,7 +61,7 @@
       </q-card>
     </q-dialog>
 
-    <q-page-container>
+    <q-page-container :style="{ marginLeft: drawerOpen ? drawerWidth : 0 }">
       <router-view></router-view>
     </q-page-container>
   </q-layout>
@@ -76,19 +76,24 @@ export default {
     return {
       user: null,
       logoutConfirmationVisible: false,
+      drawerOpen: false,
+      drawerWidth: 280,
+      drawerBreakpoint: 600,
+      isMediumScreen: false,
     };
   },
   mounted() {
     const storedUser = Cookies.get("user");
     this.user = storedUser ? JSON.parse(storedUser) : null;
+
+    this.checkScreenSize();
+    window.addEventListener('resize', this.checkScreenSize);
   },
   methods: {
     async showLogouteConfirmation() {
-      // Open the confirmation dialog
       this.logoutConfirmationVisible = true;
     },
     async cancelLogout() {
-      // Close the confirmation dialog and perform any necessary actions
       this.logoutConfirmationVisible = false;
     },
     async confirmLogout() {
@@ -99,9 +104,15 @@ export default {
       this.$router.push("/login");
     },
     async logoutProfile() {
-      // Show the confirmation dialog when the button is clicked
       this.showLogouteConfirmation();
     },
+    checkScreenSize() {
+      this.drawerOpen = this.$q.screen.width >= this.drawerBreakpoint;
+      this.drawerWidth = this.drawerOpen ? 280 : 56;
+    },
+    beforeDestroy() {
+    window.removeEventListener('resize', this.checkScreenSize);
+  },
   },
 };
 </script>
