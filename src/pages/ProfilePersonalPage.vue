@@ -31,6 +31,7 @@
         @row-click="openCardCreator"
         :rows-per-page-options="[5]"
         title="Szervező vagyok"
+        style="min-width: 250px;"
       />
     </div>
     <div class="q-mt-md q-ma-lg" v-else>

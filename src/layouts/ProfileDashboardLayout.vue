@@ -11,7 +11,7 @@
       </q-toolbar>
     </q-header>
 
-    <q-drawer v-if="user" :breakpoint="drawerBreakpoint" bordered class="bg-white" :width="drawerWidth" style="min-width: 300px;">
+    <q-drawer show-if-above v-if="user" :breakpoint="drawerBreakpoint" bordered class="bg-white" :width="drawerWidth" style="min-width: 250px;">
       <q-list padding class="text-grey-8">
         <q-item class="GNL__drawer-item" clickable to="/profile/personal">
           <q-item-section avatar />
