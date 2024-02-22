@@ -1,88 +1,93 @@
 <template>
-  <div class="q-ma-lg">
-    <q-btn
-      v-if="!showForm"
-      label="Új esemény létrehozása"
-      color="green"
-      class="q-mb-md q-pa-md"
-      @click="showForm = !showForm"
-    />
-  </div>
-
-  <div class="q-gutter-md" v-if="showForm" >
-    <q-card
-      square
-      bordered
-      class="q-pa-md shadow-1"
-    >
-      <q-form @submit.prevent="createEvent">
-        <q-input
-          square
-          filled
-          clearable
-          v-model="title"
-          type="title"
-          label="Cím"
-          required
-        />
-        <q-input
-          square
-          filled
-          clearable
-          v-model="description"
-          type="description"
-          label="Leírás"
-        />
-        <q-input
-          square
-          filled
-          clearable
-          v-model="location"
-          type="location"
-          label="Város"
-          required
-        />
-        <q-input
-          square
-          filled
-          clearable
-          v-model="place"
-          type="place"
-          label="Utca, tér"
-          required
-        />
-        <q-input
-          square
-          filled
-          clearable
-          v-model="date"
-          type="date"
-          label="Dátum"
-          :min="minDate"
-          required
-        />
-        <q-input
-          square
-          filled
-          clearable
-          v-model="time"
-          type="time"
-          label="Időpont"
-          required
-        />
-        <q-card-section>
-          <q-btn
-            type="submit"
-            unelevated
-            color="green-7"
-            size="lg"
-            class="full-width q-mt-md"
-            label="Esemény létrehozása"
+    <div class="q-ma-lg flex justify-center">
+      <q-btn
+        v-if="!showForm"
+        label="Új esemény létrehozása"
+        color="green"
+        class="q-mb-md q-pa-md"
+        @click="showForm = !showForm"
+      />
+    </div>
+    <div class="flex justify-center" v-if="showForm">
+      <q-card
+        square
+        bordered
+        class="q-ma-md q-pa-sm shadow-1"
+      >
+        <q-form @submit.prevent="createEvent">
+          <q-input
+            square
+            filled
+            clearable
+            v-model="title"
+            type="title"
+            label="Cím"
+            required
+            class="q-ma-sm"
           />
-        </q-card-section>
-      </q-form>
-    </q-card>
-  </div>
+          <q-input
+            square
+            filled
+            clearable
+            v-model="description"
+            type="description"
+            label="Leírás"
+            class="q-ma-sm"
+          />
+          <q-input
+            square
+            filled
+            clearable
+            v-model="location"
+            type="location"
+            label="Város"
+            required
+            class="q-ma-sm"
+          />
+          <q-input
+            square
+            filled
+            clearable
+            v-model="place"
+            type="place"
+            label="Utca, tér"
+            required
+            class="q-ma-sm"
+          />
+          <q-input
+            square
+            filled
+            clearable
+            v-model="date"
+            type="date"
+            label="Dátum"
+            :min="minDate"
+            required
+            class="q-ma-sm"
+          />
+          <q-input
+            square
+            filled
+            clearable
+            v-model="time"
+            type="time"
+            label="Időpont"
+            required
+            class="q-ma-sm"
+          />
+          <q-card-section>
+            <q-btn
+              type="submit"
+              unelevated
+              color="green-7"
+              size="lg"
+              class="full-width q-mt-sm"
+              label="Esemény létrehozása"
+            />
+          </q-card-section>
+        </q-form>
+      </q-card>
+    </div>
 </template>
 
 <script>

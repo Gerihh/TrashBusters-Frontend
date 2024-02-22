@@ -3,12 +3,11 @@
     <div class="loading-container" v-if="loading">
       <div class="loading-spinner"></div>
     </div>
-    <div class="card-container q-mt-md" v-if="!loading && cards[0].title">
+    <div class="card-container q-mt-md flex justify-center" v-if="!loading && cards[0].title">
       <q-card
         v-for="(card, index) in cards"
         :key="index"
         class="q-ma-md"
-        style="min-width: 200px; max-width: 400px; width: 100%;"
       >
         <q-card-section>
           <div>
@@ -207,9 +206,7 @@ export default defineComponent({
 
 <style scoped>
 .card-container {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
+  gap: 100px;
 }
 .loading-container {
   position: fixed;

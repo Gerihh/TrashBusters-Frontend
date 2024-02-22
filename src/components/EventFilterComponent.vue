@@ -1,27 +1,24 @@
 <template>
   <div class="q-ma-lg">
-    <div class="q-gutter-lg row items-start">
+    <div class="q-gutter-lg row flex justify-center">
       <q-input
         v-model="searchTitle"
         filled
         clearable
         type="search"
         label="Esemény neve"
-        style="width: 300px"
       />
       <q-input
         v-model="searchCity"
         clearable
         label="Város"
         filled
-        style="width: 250px"
       />
       <q-input
         v-model="searchAddress"
         clearable
         label="Utca, tér"
         filled
-        style="width: 250px"
       />
       <q-input
         v-model.number="model"
@@ -29,20 +26,22 @@
         filled
         label="Min. résztvevők"
         :min="0"
-        style="width: 150px"
       />
       <q-input v-model="date" type="date" filled label="Dátum" :min="minDate" />
+
+    </div>
+    <div class="q-ma-lg q-gutter-lg row flex justify-center">
       <q-btn
         @click="searchData"
         label="Keresés"
         color="green"
-        style="margin-top: 30px; padding: 10px; width: 150px"
+        style="padding: 10px; width: 100px;"
       />
       <q-btn
         @click="filterReset"
         label="Szűrők törlése"
         color="red"
-        style="margin-top: 30px; padding: 10px; width: 150px"
+        style="padding: 10px;"
       />
     </div>
   </div>
