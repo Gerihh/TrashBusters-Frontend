@@ -95,15 +95,41 @@
           class="q-col q-ma-md"
           label="Esemény törlése"
           color="red"
-          @click="deleteEvent"
+          @click="showDeleteConfirmation"
         />
         <q-btn
           v-else
           class="q-col q-ma-md"
           label="Esemény elhagyása"
           color="red"
-          @click="leaveEvent"
+          @click="showLeaveConfirmation"
         />
+      </q-card-actions>
+    </q-card>
+  </q-dialog>
+
+  <q-dialog v-model="deleteConfirmationVisible">
+    <q-card>
+      <q-card-section class="text-h6">
+        Biztosan törölni szeretné az eseményt?
+      </q-card-section>
+      <q-card-actions align="right">
+        <q-btn label="Nem" color="grey" @click="cancelDelete" />
+        <q-space />
+        <q-btn label="Igen" color="red" @click="deleteEvent" />
+      </q-card-actions>
+    </q-card>
+  </q-dialog>
+
+  <q-dialog v-model="leavingConfirmationVisible">
+    <q-card>
+      <q-card-section class="text-h6">
+        Biztosan el szeretné hagyni az eseményt?
+      </q-card-section>
+      <q-card-actions align="right">
+        <q-btn label="Nem" color="grey" @click="cancelLeave" />
+        <q-space />
+        <q-btn label="Igen" color="red" @click="leaveEvent" />
       </q-card-actions>
     </q-card>
   </q-dialog>
@@ -162,6 +188,8 @@ export default defineComponent({
       userId: "",
       openedFromCreator: false,
       loading: true,
+      deleteConfirmationVisible: false,
+      leavingConfirmationVisible: false,
     };
   },
   mounted() {
@@ -232,6 +260,7 @@ export default defineComponent({
       } catch (error) {
         console.error("Error deleting event:", error);
       }
+      this.showDeleteConfirmation = false;
     },
     async leaveEvent() {
       try {
@@ -245,6 +274,7 @@ export default defineComponent({
       } catch (error) {
         console.error("Error leaving event:", error);
       }
+      this.showLeaveConfirmation = false;
     },
     async participantLeft() {
       await axios.patch(`api/events/${this.selectedRow.id}`, {
@@ -265,6 +295,22 @@ export default defineComponent({
         console.error("Error fetching event data:", error);
       }
     },
+    showDeleteConfirmation() {
+      this.deleteConfirmationVisible = true;
+      this.cardVisible = false;
+    },
+    showLeaveConfirmation() {
+      this.leavingConfirmationVisible = true;
+      this.cardVisible = false;
+    },
+    cancelDelete() {
+      this.deleteConfirmationVisible = false;
+      this.cardVisible = true;
+    },
+    cancelLeave() {
+      this.leavingConfirmationVisible = false;
+      this.cardVisible = true;
+    }
   },
 });
 </script>

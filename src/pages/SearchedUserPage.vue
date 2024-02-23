@@ -47,7 +47,7 @@
     </div>
 
     <q-dialog v-model="cardVisible">
-      <q-card style="min-width: 500px; min-height: 100px">
+      <q-card style="min-width: 450px; min-height: 100px">
         <q-card-section>
           <div v-if="selectedRow">
             <h2 class="text-h6 q-mb-md text-center">{{ selectedRow.title }}</h2>
@@ -68,14 +68,16 @@
             </div>
           </div>
         </q-card-section>
-        <q-card-actions class="q-gutter-sm">
-          <q-btn
-            class="q-col q-ma-md"
-            label="Bezárás"
-            color="red"
-            @click="closeCard"
-          />
-        </q-card-actions>
+        <q-card-section class="flex justify-center">
+          <q-card-actions class="q-gutter-sm">
+            <q-btn
+              class="q-col q-ma-md q-pa-md"
+              label="Bezárás"
+              color="red"
+              @click="closeCard"
+            />
+          </q-card-actions>
+        </q-card-section>
       </q-card>
     </q-dialog>
   </div>

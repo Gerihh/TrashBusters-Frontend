@@ -71,10 +71,6 @@ export default defineComponent({
       this.logout();
       this.deleteConfirmationVisible = false;
     },
-    deleteProfile() {
-      // Show the confirmation dialog when the button is clicked
-      this.showDeleteConfirmation();
-    },
     logout() {
       useAuth.isLoggedIn.value = false;
       Cookies.remove("token", { path: "/" });
