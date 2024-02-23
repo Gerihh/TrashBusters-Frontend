@@ -5,7 +5,6 @@
 
   <div class="q-ma-lg flex justify-center" v-if="user && !loading">
     <q-card
-      class="my-card"
       flat
       style="background-color: #fafafa; max-width: 300px"
     >
