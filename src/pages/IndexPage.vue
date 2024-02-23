@@ -8,6 +8,7 @@
         v-for="(card, index) in cards"
         :key="index"
         class="q-ma-md"
+        style="min-width: 400px;"
       >
         <q-card-section>
           <div>

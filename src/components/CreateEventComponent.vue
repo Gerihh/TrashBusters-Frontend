@@ -13,6 +13,7 @@
         square
         bordered
         class="q-ma-md q-pa-sm shadow-1"
+        style="min-width: 400px;"
       >
         <q-form @submit.prevent="createEvent">
           <q-input
