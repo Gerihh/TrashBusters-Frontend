@@ -8,6 +8,11 @@
     />
   </div>
 
+  <div class="q-ma-lg flex justify-center">
+    <input type="file" @change="handleFileChange" />
+    <button @click="uploadProfilePicture">Upload Profile Picture</button>
+  </div>
+
   <q-dialog v-model="deleteConfirmationVisible">
     <q-card>
       <q-card-section class="text-h6">
@@ -35,6 +40,7 @@ export default defineComponent({
     return {
       user: null,
       deleteConfirmationVisible: false,
+      profilePicture: null,
     };
   },
   mounted() {
@@ -42,12 +48,28 @@ export default defineComponent({
     this.user = storedUser ? JSON.parse(storedUser) : null;
   },
   methods: {
+    handleFileChange(event) {
+      this.profilePicture = event.target.files[0];
+    },
+    uploadProfilePicture() {
+      const formData = new FormData();
+      formData.append('profilePicture', this.profilePicture);
+
+      // Assuming you have Axios installed and available globally
+      axios.post('/api/upload', formData)
+        .then(response => {
+          console.log('File uploaded successfully:', response.data.path);
+          // You can handle the response as needed (e.g., update UI)
+        })
+        .catch(error => {
+          console.error('Error uploading file:', error);
+
+        });
+    },
     showDeleteConfirmation() {
-      // Open the confirmation dialog
       this.deleteConfirmationVisible = true;
     },
     cancelDelete() {
-      // Close the confirmation dialog and perform any necessary actions
       this.deleteConfirmationVisible = false;
     },
     async confirmDelete() {
