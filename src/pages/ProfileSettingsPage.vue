@@ -1,11 +1,16 @@
 <template>
-  <div class="q-ma-lg">
+  <div class="q-ma-lg flex justify-center">
     <q-btn
       @click="showDeleteConfirmation"
       label="Profil törlése"
       color="red"
-      style="padding: 10px; width: 250px; margin-left: 550px"
+      class="q-ma-lg"
     />
+  </div>
+
+  <div class="q-ma-lg flex justify-center">
+    <input type="file" @change="handleFileChange" />
+    <button @click="uploadProfilePicture">Upload Profile Picture</button>
   </div>
 
   <q-dialog v-model="deleteConfirmationVisible">
@@ -20,9 +25,6 @@
       </q-card-actions>
     </q-card>
   </q-dialog>
-  <div v-if="user">
-    <h1>{{ user.id }}</h1>
-  </div>
 </template>
 
 <script>
@@ -38,6 +40,7 @@ export default defineComponent({
     return {
       user: null,
       deleteConfirmationVisible: false,
+      profilePicture: null,
     };
   },
   mounted() {
@@ -45,12 +48,30 @@ export default defineComponent({
     this.user = storedUser ? JSON.parse(storedUser) : null;
   },
   methods: {
+    handleFileChange(event) {
+      this.profilePicture = event.target.files[0];
+    },
+    uploadProfilePicture() {
+      const formData = new FormData();
+      formData.append('profilePicture', this.profilePicture);
+
+      axios.post(`/api/upload/${this.user.id}`, formData)
+        .then(response => {
+          this.user.profilePictureURL = response.data.url;
+
+          Cookies.set("user", JSON.stringify(this.user));
+          console.log('File uploaded successfully:', response.data.url);
+
+        })
+        .catch(error => {
+          console.error('Error uploading file:', error);
+
+        });
+    },
     showDeleteConfirmation() {
-      // Open the confirmation dialog
       this.deleteConfirmationVisible = true;
     },
     cancelDelete() {
-      // Close the confirmation dialog and perform any necessary actions
       this.deleteConfirmationVisible = false;
     },
     async confirmDelete() {
@@ -73,10 +94,6 @@ export default defineComponent({
       alert("Sikeresen törölte a profilját!");
       this.logout();
       this.deleteConfirmationVisible = false;
-    },
-    deleteProfile() {
-      // Show the confirmation dialog when the button is clicked
-      this.showDeleteConfirmation();
     },
     logout() {
       useAuth.isLoggedIn.value = false;

@@ -1,21 +1,29 @@
 <template>
-  <div class="q-ma-lg">
+  <div class="q-ma-lg flex justify-center">
     <q-btn
+      v-if="!showForm"
       label="Új esemény létrehozása"
       color="green"
-      style="padding: 10px; width: 250px; margin-left: 550px"
+      class="q-mb-md q-pa-md"
       @click="showForm = !showForm"
     />
   </div>
-
-  <div class="absolute-center" v-if="showForm">
+  <div class="q-mt-md q-ma-lg flex justify-center" v-if="showForm">
     <q-card
       square
       bordered
-      class="q-pa-md shadow-1"
-      style="width: 500px; min-height: 100px"
+      class="q-pa-sm"
+      style=" min-width: 400px;"
     >
-      <q-form class="q-gutter-md" @submit.prevent="createEvent">
+    <q-btn
+        round
+        icon="close"
+        color="red"
+        size="md"
+        style="top: -20px; right: -380px; margin: -10px;"
+        @click="clearForm"
+      />
+      <q-form @submit.prevent="createEvent">
         <q-input
           square
           filled
@@ -24,6 +32,7 @@
           type="title"
           label="Cím"
           required
+          class="q-ma-sm"
         />
         <q-input
           square
@@ -32,6 +41,7 @@
           v-model="description"
           type="description"
           label="Leírás"
+          class="q-ma-sm"
         />
         <q-input
           square
@@ -41,6 +51,7 @@
           type="location"
           label="Város"
           required
+          class="q-ma-sm"
         />
         <q-input
           square
@@ -50,6 +61,7 @@
           type="place"
           label="Utca, tér"
           required
+          class="q-ma-sm"
         />
         <q-input
           square
@@ -60,6 +72,7 @@
           label="Dátum"
           :min="minDate"
           required
+          class="q-ma-sm"
         />
         <q-input
           square
@@ -69,6 +82,7 @@
           type="time"
           label="Időpont"
           required
+          class="q-ma-sm"
         />
         <q-card-section>
           <q-btn
@@ -76,7 +90,7 @@
             unelevated
             color="green-7"
             size="lg"
-            class="full-width"
+            class="full-width q-mt-sm"
             label="Esemény létrehozása"
           />
         </q-card-section>
@@ -134,17 +148,23 @@ export default {
         await axios.post("/api/events", requestData);
         alert("Sikeresen létrehozta az eseményt!");
 
+        this.clearForm();
+
+      } catch (error) {
+        console.error("Error creating event:", error);
+        alert("Hiba a felvétel során!");
+      }
+    },
+    clearForm() {
         this.title = "";
         this.description = "";
         this.location = "";
         this.place = "";
         this.date = "";
         this.time = "";
-      } catch (error) {
-        console.error("Error creating event:", error);
-        alert("Hiba a felvétel során!");
-      }
-    },
+
+        this.showForm = false;
+    }
   },
 };
 </script>

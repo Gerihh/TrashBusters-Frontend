@@ -1,49 +1,61 @@
 <template>
   <div class="q-ma-lg">
-    <div class="q-gutter-lg row items-start">
+    <div class="q-gutter-lg row flex justify-center">
       <q-input
         v-model="searchTitle"
         filled
         clearable
         type="search"
         label="Esemény neve"
-        style="width: 300px"
       />
-      <q-input
-        v-model="searchCity"
-        clearable
-        label="Város"
-        filled
-        style="width: 250px"
-      />
-      <q-input
-        v-model="searchAddress"
-        clearable
-        label="Utca, tér"
-        filled
-        style="width: 250px"
-      />
+      <q-input v-model="searchCity" clearable label="Város" filled />
+      <q-input v-model="searchAddress" clearable label="Utca, tér" filled />
       <q-input
         v-model.number="model"
         type="number"
         filled
         label="Min. résztvevők"
         :min="0"
-        style="width: 150px"
       />
       <q-input v-model="date" type="date" filled label="Dátum" :min="minDate" />
-      <q-btn
-        @click="searchData"
-        label="Keresés"
-        color="green"
-        style="margin-top: 30px; padding: 10px; width: 150px"
-      />
-      <q-btn
-        @click="filterReset"
-        label="Szűrők törlése"
-        color="red"
-        style="margin-top: 30px; padding: 10px; width: 150px"
-      />
+    </div>
+    <div class="q-ma-lg q-gutter-lg row flex justify-center">
+      <div>
+        <q-tooltip
+          v-if="checkInputFields"
+          anchor="bottom left"
+          self="bottom middle"
+        >
+          <span style="font-size: 12px"
+            >Használja valamelyik kategóriaszűrőt</span
+          >
+        </q-tooltip>
+        <q-btn
+          @click="searchData"
+          label="Keresés"
+          color="green"
+          style="padding: 10px; width: 100px"
+          :disabled="checkInputFields"
+        />
+      </div>
+      <div>
+        <q-tooltip
+          v-if="checkInputFields"
+          anchor="bottom right"
+          self="bottom middle"
+        >
+          <span style="font-size: 12px"
+            >Használja valamelyik kategóriaszűrőt</span
+          >
+        </q-tooltip>
+        <q-btn
+          @click="filterReset"
+          label="Szűrők törlése"
+          color="red"
+          style="padding: 10px"
+          :disabled="checkInputFields"
+        />
+      </div>
     </div>
   </div>
   <div v-if="filteredData.length > 0" class="q-ma-lg" style="margin-top: 80px">
@@ -57,7 +69,7 @@
     />
   </div>
   <q-dialog v-model="cardVisible">
-    <q-card style="min-width: 500px; min-height: 100px">
+    <q-card class="q-ma-md justify-center" style="min-width: 450px">
       <q-card-section>
         <div v-if="selectedRow">
           <h2 class="text-h6 q-mb-md text-center">{{ selectedRow.title }}</h2>
@@ -86,6 +98,9 @@
           @click="closeCard"
         />
         <q-space />
+        <q-tooltip v-if="pairExists" anchor="bottom right" self="bottom right">
+          <span style="font-size: 12px">Már csatlakozott az eseményhez</span>
+        </q-tooltip>
         <q-btn
           class="q-col q-ma-md"
           label="Csatlakozás"
@@ -152,6 +167,7 @@ export default {
       minDate: "",
       pairExists: false,
       user: null,
+      searchButtonDisabled: false,
     };
   },
   mounted() {
@@ -161,6 +177,17 @@ export default {
     const today = new Date().toISOString().split("T")[0];
     this.minDate = today;
     this.searchData();
+  },
+  computed: {
+    checkInputFields() {
+      return (
+        !this.searchTitle &&
+        !this.searchCity &&
+        !this.searchAddress &&
+        !this.model &&
+        !this.date
+      );
+    },
   },
   methods: {
     async searchData() {

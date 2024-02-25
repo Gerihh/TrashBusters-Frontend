@@ -1,5 +1,7 @@
 <template>
-  <CreateEventComponent />
+  <div>
+    <CreateEventComponent/>
+  </div>
 </template>
 
 <script>
@@ -11,3 +13,4 @@ export default defineComponent({
   components: { CreateEventComponent },
 });
 </script>
+

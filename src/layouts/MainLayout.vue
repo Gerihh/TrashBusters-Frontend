@@ -24,6 +24,7 @@ export default {
   },
 };
 </script>
+
 <template>
   <q-layout view="hHh Lpr lFf" class="bg-grey-1">
     <div>
@@ -58,7 +59,9 @@ export default {
       </q-header>
     </div>
     <q-page-container>
-      <router-view></router-view>
+      <q-page padding>
+        <router-view></router-view>
+      </q-page>
     </q-page-container>
   </q-layout>
 </template>

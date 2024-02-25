@@ -3,16 +3,15 @@
     <div class="loading-spinner"></div>
   </div>
 
-  <div class="q-ma-lg row justify-center" v-if="user && !loading">
+  <div class="q-ma-lg flex justify-center" v-if="user && !loading" >
     <q-card
-      class="my-card"
       flat
-      style="background-color: #fafafa; max-width: 300px"
+      style="background-color: #fafafa;"
     >
       <img
-        :src="user.profilePictureURL"
+        :src="`${user.profilePictureURL}?${Date.now()}`"
         alt="Profilkép"
-        style="border-radius: 50%"
+        style="border-radius: 50%; max-height: 300px; max-width: 300px;"
       />
       <q-card-section class="">
         <div class="text-h6 text-center">
@@ -31,6 +30,7 @@
         @row-click="openCardCreator"
         :rows-per-page-options="[5]"
         title="Szervező vagyok"
+        style="min-width: 250px;"
       />
     </div>
     <div class="q-mt-md q-ma-lg" v-else>
@@ -40,7 +40,7 @@
       />
     </div>
 
-    <div class="q-mt-md q-ma-lg" v-if="eventsJoinedByUser.length > 0">
+    <div class="q-mt-md q-ma-lg"  v-if="eventsJoinedByUser.length > 0">
       <q-table
         :rows="eventsJoinedByUser"
         :columns="columns"
@@ -60,7 +60,7 @@
   </div>
 
   <q-dialog v-model="cardVisible">
-    <q-card style="min-width: 500px; min-height: 100px">
+    <q-card class="q-ma-md" style="min-width: 200px; max-width: 400px; width: 100%;">
       <q-card-section>
         <div v-if="selectedRow">
           <h2 class="text-h6 q-mb-md text-center">{{ selectedRow.title }}</h2>
@@ -94,15 +94,41 @@
           class="q-col q-ma-md"
           label="Esemény törlése"
           color="red"
-          @click="deleteEvent"
+          @click="showDeleteConfirmation"
         />
         <q-btn
           v-else
           class="q-col q-ma-md"
           label="Esemény elhagyása"
           color="red"
-          @click="leaveEvent"
+          @click="showLeaveConfirmation"
         />
+      </q-card-actions>
+    </q-card>
+  </q-dialog>
+
+  <q-dialog v-model="deleteConfirmationVisible">
+    <q-card>
+      <q-card-section class="text-h6">
+        Biztosan törölni szeretné az eseményt?
+      </q-card-section>
+      <q-card-actions align="right">
+        <q-btn label="Nem" color="grey" @click="cancelDelete" />
+        <q-space />
+        <q-btn label="Igen" color="red" @click="deleteEvent" />
+      </q-card-actions>
+    </q-card>
+  </q-dialog>
+
+  <q-dialog v-model="leavingConfirmationVisible">
+    <q-card>
+      <q-card-section class="text-h6">
+        Biztosan el szeretné hagyni az eseményt?
+      </q-card-section>
+      <q-card-actions align="right">
+        <q-btn label="Nem" color="grey" @click="cancelLeave" />
+        <q-space />
+        <q-btn label="Igen" color="red" @click="leaveEvent" />
       </q-card-actions>
     </q-card>
   </q-dialog>
@@ -161,6 +187,8 @@ export default defineComponent({
       userId: "",
       openedFromCreator: false,
       loading: true,
+      deleteConfirmationVisible: false,
+      leavingConfirmationVisible: false,
     };
   },
   mounted() {
@@ -231,6 +259,7 @@ export default defineComponent({
       } catch (error) {
         console.error("Error deleting event:", error);
       }
+      this.showDeleteConfirmation = false;
     },
     async leaveEvent() {
       try {
@@ -244,6 +273,7 @@ export default defineComponent({
       } catch (error) {
         console.error("Error leaving event:", error);
       }
+      this.showLeaveConfirmation = false;
     },
     async participantLeft() {
       await axios.patch(`api/events/${this.selectedRow.id}`, {
@@ -264,6 +294,22 @@ export default defineComponent({
         console.error("Error fetching event data:", error);
       }
     },
+    showDeleteConfirmation() {
+      this.deleteConfirmationVisible = true;
+      this.cardVisible = false;
+    },
+    showLeaveConfirmation() {
+      this.leavingConfirmationVisible = true;
+      this.cardVisible = false;
+    },
+    cancelDelete() {
+      this.deleteConfirmationVisible = false;
+      this.cardVisible = true;
+    },
+    cancelLeave() {
+      this.leavingConfirmationVisible = false;
+      this.cardVisible = true;
+    }
   },
 });
 </script>

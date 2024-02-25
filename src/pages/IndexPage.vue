@@ -3,11 +3,12 @@
     <div class="loading-container" v-if="loading">
       <div class="loading-spinner"></div>
     </div>
-    <div class="card-container" v-if="!loading && cards[0].title">
+    <div class="card-container q-mt-md flex justify-center" v-if="!loading && cards[0].title">
       <q-card
         v-for="(card, index) in cards"
         :key="index"
-        style="min-width: 500px; min-height: 100px"
+        class="q-ma-md"
+        style="min-width: 400px;"
       >
         <q-card-section>
           <div>
@@ -40,6 +41,7 @@
     <h1>user not logged in</h1>
   </div>
 </template>
+
 
 <script>
 import axios from "axios";
@@ -205,9 +207,7 @@ export default defineComponent({
 
 <style scoped>
 .card-container {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
+  gap: 100px;
 }
 .loading-container {
   position: fixed;
