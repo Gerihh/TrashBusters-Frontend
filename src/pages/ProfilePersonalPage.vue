@@ -3,15 +3,15 @@
     <div class="loading-spinner"></div>
   </div>
 
-  <div class="q-ma-lg flex justify-center" v-if="user && !loading">
+  <div class="q-ma-lg flex justify-center" v-if="user && !loading" >
     <q-card
       flat
-      style="background-color: #fafafa; max-width: 300px"
+      style="background-color: #fafafa;"
     >
       <img
-        :src="user.profilePictureURL"
+        :src="`${user.profilePictureURL}?${Date.now()}`"
         alt="Profilkép"
-        style="border-radius: 50%"
+        style="border-radius: 50%; max-height: 300px; max-width: 300px;"
       />
       <q-card-section class="">
         <div class="text-h6 text-center">

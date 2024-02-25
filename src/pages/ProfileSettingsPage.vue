@@ -55,11 +55,13 @@ export default defineComponent({
       const formData = new FormData();
       formData.append('profilePicture', this.profilePicture);
 
-      // Assuming you have Axios installed and available globally
-      axios.post('/api/upload', formData)
+      axios.post(`/api/upload/${this.user.id}`, formData)
         .then(response => {
-          console.log('File uploaded successfully:', response.data.path);
-          // You can handle the response as needed (e.g., update UI)
+          this.user.profilePictureURL = response.data.url;
+
+          Cookies.set("user", JSON.stringify(this.user));
+          console.log('File uploaded successfully:', response.data.url);
+
         })
         .catch(error => {
           console.error('Error uploading file:', error);
