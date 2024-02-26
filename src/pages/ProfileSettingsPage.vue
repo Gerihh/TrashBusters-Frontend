@@ -10,6 +10,8 @@
 
   <div class="q-ma-lg flex justify-center">
     <input type="file" @change="handleFileChange" />
+  </div>
+  <div class="q-ma-lg flex justify-center">
     <button @click="uploadProfilePicture">Upload Profile Picture</button>
   </div>
 

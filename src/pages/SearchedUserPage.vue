@@ -34,6 +34,12 @@
           title="Szervező"
         />
       </div>
+      <div class="q-mt-md q-ma-lg" v-else>
+      <q-table
+        title="Szervező vagyok"
+        no-data-label="Jelenleg nem szervez egyetlen eseményt sem"
+      />
+    </div>
       <div class="q-mt-md q-ma-lg" v-if="eventsJoinedByUser.length > 0">
         <q-table
           :rows="eventsJoinedByUser"
@@ -44,6 +50,12 @@
           title="Résztvevő"
         />
       </div>
+      <div class="q-mt-md q-ma-lg" v-else>
+      <q-table
+        title="Résztvevő vagyok"
+        no-data-label="Jelenleg nem vesz részt egyetlen eseményen sem"
+      />
+    </div>
     </div>
 
     <q-dialog v-model="cardVisible">

@@ -4,7 +4,8 @@
       square
       bordered
       class="q-pa-md shadow-1"
-      style="width: 500px; min-height: 100px"
+      :class="{ 'q-ma-lg': $q.screen.width > 1024 }"
+      :style="{ width: $q.screen.width > 1024 ? '500px' : '250px' }"
     >
       <q-form class="q-gutter-md" @submit="register">
         <q-input

@@ -1,60 +1,89 @@
 <template>
-  <div class="q-ma-lg">
-    <div class="q-gutter-lg row flex justify-center">
-      <q-input
-        v-model="searchTitle"
-        filled
-        clearable
-        type="search"
-        label="Esemény neve"
-      />
-      <q-input v-model="searchCity" clearable label="Város" filled />
-      <q-input v-model="searchAddress" clearable label="Utca, tér" filled />
-      <q-input
-        v-model.number="model"
-        type="number"
-        filled
-        label="Min. résztvevők"
-        :min="0"
-      />
-      <q-input v-model="date" type="date" filled label="Dátum" :min="minDate" />
-    </div>
-    <div class="q-ma-lg q-gutter-lg row flex justify-center">
-      <div>
-        <q-tooltip
-          v-if="checkInputFields"
-          anchor="bottom left"
-          self="bottom middle"
-        >
-          <span style="font-size: 12px"
-            >Használja valamelyik kategóriaszűrőt</span
-          >
-        </q-tooltip>
-        <q-btn
-          @click="searchData"
-          label="Keresés"
-          color="green"
-          style="padding: 10px; width: 100px"
-          :disabled="checkInputFields"
+  <div class="q-ma-lg" :class="{ 'q-ma-lg': $q.screen.width > 1024 }">
+    <div
+      :style="{
+        width: $q.screen.width > 1024 ? '1000px' : '300px',
+        margin: 'auto',
+      }"
+    >
+      <div class="q-gutter-md flex justify-center">
+        <q-input
+          v-model="searchTitle"
+          filled
+          clearable
+          type="search"
+          label="Esemény neve"
+          class="q-mb-md"
         />
-      </div>
-      <div>
-        <q-tooltip
-          v-if="checkInputFields"
-          anchor="bottom right"
-          self="bottom middle"
-        >
-          <span style="font-size: 12px"
-            >Használja valamelyik kategóriaszűrőt</span
-          >
-        </q-tooltip>
-        <q-btn
-          @click="filterReset"
-          label="Szűrők törlése"
-          color="red"
-          style="padding: 10px"
-          :disabled="checkInputFields"
+        <q-input
+          v-model="searchCity"
+          clearable
+          label="Város"
+          filled
+          class="q-mb-md"
         />
+        <q-input
+          v-model="searchAddress"
+          clearable
+          label="Utca, tér"
+          filled
+          class="q-mb-md"
+        />
+        <q-input
+          v-model.number="model"
+          type="number"
+          filled
+          label="Min. résztvevők"
+          :min="0"
+          class="q-mb-md"
+        />
+        <q-input
+          v-model="date"
+          type="date"
+          filled
+          label="Dátum"
+          :min="minDate"
+          class="q-mb-md"
+        />
+
+        <div class="q-ma-lg q-gutter-md row flex justify-center">
+          <div>
+            <q-tooltip
+              v-if="checkInputFields"
+              anchor="bottom left"
+              self="bottom middle"
+            >
+              <span style="font-size: 12px"
+                >Használja valamelyik kategóriaszűrőt</span
+              >
+            </q-tooltip>
+            <q-btn
+              @click="searchData"
+              label="Keresés"
+              color="green"
+              style="padding: 10px; width: 140px"
+              :disabled="checkInputFields"
+            />
+          </div>
+          <div>
+            <q-tooltip
+              v-if="checkInputFields"
+              anchor="bottom right"
+              self="bottom middle"
+            >
+              <span style="font-size: 12px"
+                >Használja valamelyik kategóriaszűrőt</span
+              >
+            </q-tooltip>
+            <q-btn
+              @click="filterReset"
+              label="Szűrők törlése"
+              color="red"
+              style="padding: 10px; width: 140px"
+              :disabled="checkInputFields"
+            />
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -69,7 +98,11 @@
     />
   </div>
   <q-dialog v-model="cardVisible">
-    <q-card class="q-ma-md justify-center" style="min-width: 450px">
+    <q-card
+      class="q-ma-md justify-center"
+      :class="{ 'q-ma-lg': $q.screen.width > 1024 }"
+      :style="{ width: $q.screen.width > 1024 ? '500px' : '270px' }"
+    >
       <q-card-section>
         <div v-if="selectedRow">
           <h2 class="text-h6 q-mb-md text-center">{{ selectedRow.title }}</h2>

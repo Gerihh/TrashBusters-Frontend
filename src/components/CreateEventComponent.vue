@@ -13,14 +13,15 @@
       square
       bordered
       class="q-pa-sm"
-      style=" min-width: 400px;"
+      :class="{ 'q-ma-lg': $q.screen.width > 1024 }"
+      :style="{ width: $q.screen.width > 1024 ? '500px' : '250px' }"
     >
     <q-btn
         round
         icon="close"
         color="red"
         size="md"
-        style="top: -20px; right: -380px; margin: -10px;"
+        style="top: -20px; right: -230px; margin: -10px;"
         @click="clearForm"
       />
       <q-form @submit.prevent="createEvent">
