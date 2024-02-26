@@ -6,6 +6,7 @@
   <div class="q-ma-lg flex justify-center" v-if="user && !loading" >
     <q-card
       flat
+      class="flex justify-center"
       style="background-color: #fafafa;"
     >
       <img
