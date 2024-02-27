@@ -57,55 +57,82 @@
   </div>
 
   <q-dialog v-model="cardVisible">
-    <q-card
-      class="q-ma-md"
-      style="min-width: 200px; max-width: 400px; width: 100%"
-    >
-      <q-card-section>
-        <div v-if="selectedRow">
-          <h2 class="text-h6 q-mb-md text-center">{{ selectedRow.title }}</h2>
-          <p class="text-body2 q-mb-md">{{ selectedRow.description }}</p>
-          <div class="q-mb-md">
-            <strong>Helyszín:</strong> {{ selectedRow.location }},
-            {{ selectedRow.place }}
-          </div>
-          <div class="q-mb-md">
-            <strong>Résztvevők:</strong> {{ selectedRow.participants }} fő
-          </div>
-          <div class="q-mb-md">
-            <strong>Időpont:</strong> {{ selectedRow.date }},
-            {{ selectedRow.time }}
-          </div>
-          <div class="q-mb-md">
-            <strong>Szervező:</strong> {{ creatorName }}
-          </div>
-          <div class="q-mb-md"><strong>Lerakó:</strong> {{ dumpName }}</div>
-        </div>
-      </q-card-section>
-      <q-card-actions class="q-gutter-sm">
-        <q-btn
-          class="q-col q-ma-md"
-          label="Bezárás"
-          color="red"
-          @click="closeCard"
-        />
-        <q-space />
-        <q-btn
-          v-if="openedFromCreator"
-          class="q-col q-ma-md"
-          label="Esemény törlése"
-          color="red"
-          @click="showDeleteConfirmation"
-        />
-        <q-btn
-          v-else
-          class="q-col q-ma-md"
-          label="Esemény elhagyása"
-          color="red"
-          @click="showLeaveConfirmation"
-        />
-      </q-card-actions>
-    </q-card>
+    <div class="q-ma-lg" :class="{ 'q-ma-lg': $q.screen.width > 1024 }">
+      <div
+        :style="{
+          width: $q.screen.width > 1024 ? '500px' : '300px',
+          margin: 'auto',
+        }"
+      >
+        <q-card style="min-width: 200px; max-width: 400px; width: 100%">
+          <q-card-section>
+            <div v-if="selectedRow">
+              <h2 class="text-h6 q-mb-md text-center">
+                {{ selectedRow.title }}
+              </h2>
+              <p class="text-body2 q-mb-md">{{ selectedRow.description }}</p>
+              <div class="q-mb-md">
+                <strong>Helyszín:</strong> {{ selectedRow.location }},
+                {{ selectedRow.place }}
+              </div>
+              <div class="q-mb-md">
+                <strong>Résztvevők:</strong> {{ selectedRow.participants }} fő
+              </div>
+              <div class="q-mb-md">
+                <strong>Időpont:</strong> {{ selectedRow.date }},
+                {{ selectedRow.time }}
+              </div>
+              <div class="q-mb-md">
+                <strong>Szervező:</strong> {{ creatorName }}
+              </div>
+              <div class="q-mb-md"><strong>Lerakó:</strong> {{ dumpName }}</div>
+            </div>
+          </q-card-section>
+
+          <q-card-actions
+            v-if="openedFromCreator"
+            class="q-gutter-sm flex justify-center"
+          >
+            <q-btn
+              class="q-col q-ma-md"
+              label="Esemény törlése"
+              color="red"
+              @click="showDeleteConfirmation"
+            />
+            <q-btn
+              v-if="openedFromCreator"
+              class="q-col q-ma-md"
+              label="Esemény szerkesztése"
+              color="orange-5"
+              @click="editEvent"
+            />
+            <q-btn
+              class="q-col q-ma-md"
+              label="Bezárás"
+              color="red"
+              @click="closeCard"
+            />
+          </q-card-actions>
+          <q-card-actions v-else class="q-gutter-sm column justify-center">
+
+
+            <q-btn
+              class="q-col q-ma-sm"
+              label="Esemény elhagyása"
+              color="red"
+              @click="showLeaveConfirmation"
+            />
+            <q-space />
+            <q-btn
+              class="q-col q-ma-sm"
+              label="Bezárás"
+              color="red"
+              @click="closeCard"
+            />
+          </q-card-actions>
+        </q-card>
+      </div>
+    </div>
   </q-dialog>
 
   <q-dialog v-model="deleteConfirmationVisible">

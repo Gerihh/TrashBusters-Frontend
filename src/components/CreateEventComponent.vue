@@ -16,7 +16,15 @@
       :class="{ 'q-ma-lg': $q.screen.width > 1024 }"
       :style="{ width: $q.screen.width > 1024 ? '500px' : '250px' }"
     >
-    <q-btn
+    <q-btn v-if="$q.screen.width > 1024"
+        round
+        icon="close"
+        color="red"
+        size="md"
+        style="top: -20px; right: -480px; margin: -10px;"
+        @click="clearForm"
+      />
+      <q-btn v-if="$q.screen.width < 1024"
         round
         icon="close"
         color="red"

@@ -32,7 +32,7 @@ const routes = [
         path: "user/:id",
         component: () => import("pages/SearchedUserPage.vue"),
       },
-    ]
+    ],
   },
   {
     path: "/profile",
@@ -50,9 +50,8 @@ const routes = [
         path: "settings",
         component: () => import("pages/ProfileSettingsPage.vue"),
       },
-    ]
+    ],
   },
-
 
   // Always leave this as last one,
   // but you can also remove it
