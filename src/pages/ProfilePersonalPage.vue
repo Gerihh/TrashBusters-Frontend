@@ -3,15 +3,12 @@
     <div class="loading-spinner"></div>
   </div>
 
-  <div class="q-ma-lg flex justify-center" v-if="user && !loading" >
-    <q-card
-      flat
-      style="background-color: #fafafa;"
-    >
+  <div class="q-ma-lg flex justify-center" v-if="user && !loading">
+    <q-card flat style="background-color: #fafafa">
       <img
         :src="`${user.profilePictureURL}?${Date.now()}`"
         alt="Profilkép"
-        style="border-radius: 50%; max-height: 300px; max-width: 300px;"
+        style="border-radius: 50%; max-height: 300px; max-width: 300px"
       />
       <q-card-section class="">
         <div class="text-h6 text-center">
@@ -30,7 +27,7 @@
         @row-click="openCardCreator"
         :rows-per-page-options="[5]"
         title="Szervező vagyok"
-        style="min-width: 250px;"
+        style="min-width: 250px"
       />
     </div>
     <div class="q-mt-md q-ma-lg" v-else>
@@ -40,7 +37,7 @@
       />
     </div>
 
-    <div class="q-mt-md q-ma-lg"  v-if="eventsJoinedByUser.length > 0">
+    <div class="q-mt-md q-ma-lg" v-if="eventsJoinedByUser.length > 0">
       <q-table
         :rows="eventsJoinedByUser"
         :columns="columns"
@@ -60,7 +57,10 @@
   </div>
 
   <q-dialog v-model="cardVisible">
-    <q-card class="q-ma-md" style="min-width: 200px; max-width: 400px; width: 100%;">
+    <q-card
+      class="q-ma-md"
+      style="min-width: 200px; max-width: 400px; width: 100%"
+    >
       <q-card-section>
         <div v-if="selectedRow">
           <h2 class="text-h6 q-mb-md text-center">{{ selectedRow.title }}</h2>
@@ -79,6 +79,7 @@
           <div class="q-mb-md">
             <strong>Szervező:</strong> {{ creatorName }}
           </div>
+          <div class="q-mb-md"><strong>Lerakó:</strong> {{ dumpName }}</div>
         </div>
       </q-card-section>
       <q-card-actions class="q-gutter-sm">
@@ -184,6 +185,7 @@ export default defineComponent({
       cardVisible: false,
       selectedRow: null,
       creatorName: null,
+      dumpName: null,
       userId: "",
       openedFromCreator: false,
       loading: true,
@@ -221,12 +223,14 @@ export default defineComponent({
       this.cardVisible = true;
       this.openedFromCreator = true;
       await this.getCreatorName();
+      await this.getDumpName();
     },
     async openCardParticipant(event, row, columnIndex) {
       this.selectedRow = row;
       this.cardVisible = true;
       this.openedFromCreator = false;
       await this.getCreatorName();
+      await this.getDumpName();
     },
     closeCard() {
       this.selectedRow = null;
@@ -248,6 +252,27 @@ export default defineComponent({
         this.creatorName = user.username;
       } catch (error) {
         console.error("Error fetching creator name:", error);
+      }
+    },
+    async getDumpName() {
+      try {
+        if (!this.selectedRow) {
+          return;
+        }
+        const eventResponse = await axios.get(
+          `/api/events/${this.selectedRow.id}`
+        );
+        if (eventResponse.data.dumpId) {
+          const response = await axios.get(
+            `/api/dump/name/${eventResponse.data.dumpId}`
+          );
+
+          this.dumpName = response.data;
+        } else {
+          this.dumpName = "-";
+        }
+      } catch (error) {
+        console.error("Error fetching dump name:", error);
       }
     },
     async deleteEvent() {
@@ -309,7 +334,7 @@ export default defineComponent({
     cancelLeave() {
       this.leavingConfirmationVisible = false;
       this.cardVisible = true;
-    }
+    },
   },
 });
 </script>

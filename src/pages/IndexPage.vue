@@ -133,7 +133,7 @@ export default defineComponent({
             const dumpResponse = await axios.get(`/api/dump/name/${this.mostParticipantsEvent.dumpId}`);
             this.cards[0].dumpName = dumpResponse.data || "";
           } else {
-            this.cards[0].dumpName = "";
+            this.cards[0].dumpName = "-";
           }
         }
       } catch (error) {
@@ -170,7 +170,7 @@ export default defineComponent({
             );
             this.cards[1].dumpName = dumpResponse.data || "";
           } else {
-            this.cards[1].dumpName = "";
+            this.cards[1].dumpName = "-";
           }
         }
       } catch (error) {
@@ -207,7 +207,7 @@ export default defineComponent({
             );
             this.cards[2].dumpName = dumpResponse.data || "";
           } else {
-            this.cards[2].dumpName = "";
+            this.cards[2].dumpName = "-";
           }
         }
       } catch (error) {
