@@ -31,6 +31,9 @@
           <div class="q-mb-md">
             <strong>Szervező:</strong> {{ card.creatorName }}
           </div>
+          <div class="q-mb-md">
+            <strong>Lerakó:</strong> {{ card.dumpName }}
+          </div>
         </div>
       </q-card-section>
     </q-card>
@@ -64,6 +67,7 @@ export default defineComponent({
           date: "",
           time: "",
           creatorName: "",
+          dumpName: "",
         },
         {
           title: "",
@@ -74,6 +78,7 @@ export default defineComponent({
           date: "",
           time: "",
           creatorName: "",
+          dumpName: "",
         },
         {
           category: "",
@@ -85,6 +90,7 @@ export default defineComponent({
           date: "",
           time: "",
           creatorName: "",
+          dumpName: "",
         },
       ],
       loading: true,
@@ -122,6 +128,13 @@ export default defineComponent({
           } else {
             this.cards[0].creatorName = "";
           }
+
+          if (this.mostParticipantsEvent.dumpId) {
+            const dumpResponse = await axios.get(`/api/dump/name/${this.mostParticipantsEvent.dumpId}`);
+            this.cards[0].dumpName = dumpResponse.data || "";
+          } else {
+            this.cards[0].dumpName = "";
+          }
         }
       } catch (error) {
         console.error("Error fetching most participants event:", error);
@@ -150,6 +163,15 @@ export default defineComponent({
           } else {
             this.cards[1].creatorName = "";
           }
+
+          if (this.latestEvent.dumpId) {
+            const dumpResponse = await axios.get(
+              `/api/dump/name/${this.latestEvent.dumpId}`
+            );
+            this.cards[1].dumpName = dumpResponse.data || "";
+          } else {
+            this.cards[1].dumpName = "";
+          }
         }
       } catch (error) {
         console.error("Error fetching latest event:", error);
@@ -177,6 +199,15 @@ export default defineComponent({
             this.cards[2].creatorName = creatorResponse.data.username || "";
           } else {
             this.cards[2].creatorName = "";
+          }
+
+          if (this.closestEvent.dumpId) {
+            const dumpResponse = await axios.get(
+              `/api/dump/name/${this.closestEvent.dumpId}`
+            );
+            this.cards[2].dumpName = dumpResponse.data || "";
+          } else {
+            this.cards[2].dumpName = "";
           }
         }
       } catch (error) {
