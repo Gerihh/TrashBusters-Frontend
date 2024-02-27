@@ -121,6 +121,7 @@
           <div class="q-mb-md">
             <strong>Szervező:</strong> {{ creatorName }}
           </div>
+          <div class="q-mb-md"><strong>Lerakó:</strong> {{ dumpName }}</div>
         </div>
       </q-card-section>
       <q-card-actions class="q-gutter-sm">
@@ -197,6 +198,7 @@ export default {
       selectedRow: null,
       userId: "",
       creatorName: null,
+      dumpName: null,
       minDate: "",
       pairExists: false,
       user: null,
@@ -262,7 +264,11 @@ export default {
     },
     async openCard(event, row, columnIndex) {
       this.selectedRow = row;
-      await Promise.all([this.getCreatorName(), this.checkPairExists()]);
+      await Promise.all([
+        this.getCreatorName(),
+        this.checkPairExists(),
+        this.getDumpName(),
+      ]);
       this.cardVisible = true;
     },
     closeCard() {
@@ -314,6 +320,22 @@ export default {
         this.creatorName = user.username;
       } catch (error) {
         console.error("Error fetching creator name:", error);
+      }
+    },
+    async getDumpName() {
+      try {
+        if (!this.selectedRow || !this.selectedRow.dumpId) {
+          this.dumpName = "-";
+          return;
+        }
+
+        const response = await axios.get(
+          `/api/dump/name/${this.selectedRow.dumpId}`
+        );
+
+        this.dumpName = response.data;
+      } catch (error) {
+        console.error("Error fetching dump name:", error);
       }
     },
     async checkPairExists() {
