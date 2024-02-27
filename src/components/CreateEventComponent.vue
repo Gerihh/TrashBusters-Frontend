@@ -85,6 +85,15 @@
           required
           class="q-ma-sm"
         />
+        <q-input
+          square
+          filled
+          clearable
+          v-model="dumpId"
+          type="dumpId"
+          label="Lerakó azonosítója"
+          class="q-ma-sm"
+        />
         <q-card-section>
           <q-btn
             type="submit"
@@ -117,6 +126,7 @@ export default {
       time: "",
       participants: "",
       creatorId: "",
+      dumpId: "",
       minDate: "",
     };
   },
@@ -144,6 +154,7 @@ export default {
           time: this.time,
           participants: this.participants + 1,
           creatorId: this.creatorId,
+          dumpId: this.dumpId,
         };
 
         await axios.post("/api/events", requestData);
@@ -163,6 +174,7 @@ export default {
         this.place = "";
         this.date = "";
         this.time = "";
+        this.dumpId = "",
 
         this.showForm = false;
     }
