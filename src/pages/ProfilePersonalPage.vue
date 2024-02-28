@@ -5,11 +5,8 @@
 
   <div class="q-ma-lg flex justify-center" v-if="user && !loading">
     <q-card flat style="background-color: #fafafa">
-      <img
-        :src="`${user.profilePictureURL}?${Date.now()}`"
-        alt="Profilkép"
-        style="border-radius: 50%; max-height: 300px; max-width: 300px"
-      />
+      <img :src="`${user.profilePictureURL}?${Date.now()}`" alt="Profilkép"
+        style="border-radius: 50%; max-height: 300px; max-width: 300px" />
       <q-card-section class="">
         <div class="text-h6 text-center">
           {{ user.username }} #{{ user.id }}
@@ -20,50 +17,29 @@
 
   <div v-if="!loading">
     <div class="q-mt-md q-ma-lg" v-if="eventsCreatedByUser.length > 0">
-      <q-table
-        :rows="eventsCreatedByUser"
-        :columns="columns"
-        row-key="id"
-        @row-click="openCardCreator"
-        :rows-per-page-options="[5]"
-        title="Szervező vagyok"
-        style="min-width: 250px"
-      />
+      <q-table :rows="eventsCreatedByUser" :columns="columns" row-key="id" @row-click="openCardCreator"
+        :rows-per-page-options="[5]" title="Szervező vagyok" style="min-width: 250px" />
     </div>
     <div class="q-mt-md q-ma-lg" v-else>
-      <q-table
-        title="Szervező vagyok"
-        no-data-label="Jelenleg nem szervez egyetlen eseményt sem"
-      />
+      <q-table title="Szervező vagyok" no-data-label="Jelenleg nem szervez egyetlen eseményt sem" />
     </div>
 
     <div class="q-mt-md q-ma-lg" v-if="eventsJoinedByUser.length > 0">
-      <q-table
-        :rows="eventsJoinedByUser"
-        :columns="columns"
-        row-key="id"
-        @row-click="openCardParticipant"
-        :rows-per-page-options="[5]"
-        title="Résztvevő vagyok"
-        no-data-label="Jelenleg nem vesz részt egyetlen eseményen sem"
-      />
+      <q-table :rows="eventsJoinedByUser" :columns="columns" row-key="id" @row-click="openCardParticipant"
+        :rows-per-page-options="[5]" title="Résztvevő vagyok"
+        no-data-label="Jelenleg nem vesz részt egyetlen eseményen sem" />
     </div>
     <div class="q-mt-md q-ma-lg" v-else>
-      <q-table
-        title="Résztvevő vagyok"
-        no-data-label="Jelenleg nem vesz részt egyetlen eseményen sem"
-      />
+      <q-table title="Résztvevő vagyok" no-data-label="Jelenleg nem vesz részt egyetlen eseményen sem" />
     </div>
   </div>
 
   <q-dialog v-model="cardVisible">
     <div class="q-ma-lg" :class="{ 'q-ma-lg': $q.screen.width > 1024 }">
-      <div
-        :style="{
-          width: $q.screen.width > 1024 ? '500px' : '300px',
-          margin: 'auto',
-        }"
-      >
+      <div :style="{
+        width: $q.screen.width > 1024 ? '500px' : '300px',
+        margin: 'auto',
+      }">
         <q-card style="min-width: 200px; max-width: 400px; width: 100%">
           <q-card-section>
             <div v-if="selectedRow">
@@ -89,46 +65,18 @@
             </div>
           </q-card-section>
 
-          <q-card-actions
-            v-if="openedFromCreator"
-            class="q-gutter-sm flex justify-center"
-          >
-            <q-btn
-              class="q-col q-ma-md"
-              label="Esemény törlése"
-              color="red"
-              @click="showDeleteConfirmation"
-            />
-            <q-btn
-              v-if="openedFromCreator"
-              class="q-col q-ma-md"
-              label="Esemény szerkesztése"
-              color="orange-5"
-              @click="editEvent"
-            />
-            <q-btn
-              class="q-col q-ma-md"
-              label="Bezárás"
-              color="red"
-              @click="closeCard"
-            />
+          <q-card-actions v-if="openedFromCreator" class="q-gutter-sm flex justify-center">
+            <q-btn class="q-col q-ma-md" label="Esemény törlése" color="red" @click="showDeleteConfirmation" />
+            <q-btn v-if="openedFromCreator" class="q-col q-ma-md" label="Esemény szerkesztése" color="orange-5"
+              @click="editEvent" />
+            <q-btn class="q-col q-ma-md" label="Bezárás" color="red" @click="closeCard" />
           </q-card-actions>
           <q-card-actions v-else class="q-gutter-sm column justify-center">
 
 
-            <q-btn
-              class="q-col q-ma-sm"
-              label="Esemény elhagyása"
-              color="red"
-              @click="showLeaveConfirmation"
-            />
+            <q-btn class="q-col q-ma-sm" label="Esemény elhagyása" color="red" @click="showLeaveConfirmation" />
             <q-space />
-            <q-btn
-              class="q-col q-ma-sm"
-              label="Bezárás"
-              color="red"
-              @click="closeCard"
-            />
+            <q-btn class="q-col q-ma-sm" label="Bezárás" color="red" @click="closeCard" />
           </q-card-actions>
         </q-card>
       </div>
@@ -159,6 +107,55 @@
         <q-btn label="Igen" color="red" @click="leaveEvent" />
       </q-card-actions>
     </q-card>
+  </q-dialog>
+
+  <q-dialog v-model="editEventVisible">
+    <div class="q-mt-md q-ma-lg flex justify-center">
+    <q-card
+      square
+      bordered
+      class="q-pa-sm"
+      :class="{ 'q-ma-lg': $q.screen.width > 1024 }"
+      :style="{ width: $q.screen.width > 1024 ? '500px' : '250px' }"
+    >
+    <q-btn v-if="$q.screen.width > 1024"
+        round
+        icon="close"
+        color="red"
+        size="md"
+        style="top: -20px; right: -480px; margin: -10px;"
+        @click="editEventVisible = false; cardVisible = true"
+      />
+      <q-btn v-if="$q.screen.width < 1024"
+        round
+        icon="close"
+        color="red"
+        size="md"
+        style="top: -20px; right: -230px; margin: -10px"
+        @click="editEventVisible = false"
+      />
+        <q-form @submit.prevent="updateEvent">
+          <q-input square filled clearable v-model="editedEvent.title" type="title" :key="title" label="Cím" required
+            class="q-ma-sm" />
+          <q-input square filled clearable v-model="editedEvent.description" type="description" :key="description"
+            label="Leírás" class="q-ma-sm" />
+          <q-input square filled clearable v-model="editedEvent.location" type="location" label="Város" :key="location"
+            required class="q-ma-sm" />
+          <q-input square filled clearable v-model="editedEvent.place" type="place" label="Utca, tér" :key="place"
+            required class="q-ma-sm" />
+          <q-input square filled clearable v-model="editedEvent.date" type="date" label="Dátum" :key="date" :min="minDate"
+            required class="q-ma-sm" />
+          <q-input square filled clearable v-model="editedEvent.time" type="time" :key="time" label="Időpont" required
+            class="q-ma-sm" />
+          <q-input square filled clearable v-model="editedEvent.dumpId" type="dumpId" :key="dumpId"
+            label="Lerakó azonosítója" class="q-ma-sm" />
+          <q-card-section>
+            <q-btn type="submit" unelevated color="green-7" size="lg" class="full-width q-mt-sm"
+              label="Esemény frissítése" />
+          </q-card-section>
+        </q-form>
+      </q-card>
+    </div>
   </q-dialog>
 </template>
 
@@ -218,12 +215,26 @@ export default defineComponent({
       loading: true,
       deleteConfirmationVisible: false,
       leavingConfirmationVisible: false,
+      editEventVisible: false,
+      editedEvent: {
+        title: "",
+        description: "",
+        location: "",
+        place: "",
+        date: "",
+        time: "",
+        dumpId: "",
+      },
+      minDate: "",
+
     };
   },
   mounted() {
     const storedUser = Cookies.get("user");
     this.user = storedUser ? JSON.parse(storedUser) : null;
 
+    const today = new Date().toISOString().split("T")[0];
+    this.minDate = today;
     this.fetchEventData();
   },
   methods: {
@@ -346,6 +357,46 @@ export default defineComponent({
         console.error("Error fetching event data:", error);
       }
     },
+    async editEvent() {
+      // Fetch the edited event when the edit button is clicked
+      try {
+        const response = await axios.get(`/api/events/${this.selectedRow.id}`);
+        this.editedEvent = response.data;
+        // Set the form fields with the values from the fetched event
+        this.title = this.editedEvent.title;
+        this.description = this.editedEvent.description;
+        this.location = this.editedEvent.location;
+        this.place = this.editedEvent.place;
+        this.date = this.editedEvent.date;
+        this.time = this.editedEvent.time;
+        this.dumpId = this.editedEvent.dumpId;
+        // Show the edit form
+        this.editEventVisible = true;
+        this.cardVisible = false;
+      } catch (error) {
+        console.error("Error fetching edited event:", error);
+      }
+    },
+    async updateEvent() {
+      // Implement the logic to update the event
+      try {
+        await axios.patch(`/api/events/${this.selectedRow.id}`, {
+          title: this.editedEvent.title,
+          description: this.editedEvent.description,
+          location: this.editedEvent.location,
+          place: this.editedEvent.place,
+          date: this.editedEvent.date,
+          time: this.editedEvent.time,
+          dumpId: this.editedEvent.dumpId,
+        });
+        alert("Esemény sikeresen frissítve!");
+        this.closeCard();
+        window.location.reload();
+      } catch (error) {
+        console.error("Error updating event:", error);
+      }
+      this.editEventVisible = false;
+    },
     showDeleteConfirmation() {
       this.deleteConfirmationVisible = true;
       this.cardVisible = false;
@@ -393,6 +444,7 @@ export default defineComponent({
   0% {
     transform: rotate(0deg);
   }
+
   100% {
     transform: rotate(360deg);
   }

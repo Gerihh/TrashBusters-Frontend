@@ -182,10 +182,8 @@ export default {
         this.place = "";
         this.date = "";
         this.time = "";
-        this.dumpId = "",
-
-        this.showForm = false;
-    }
+        this.dumpId = ""
+    },
   },
 };
 </script>
