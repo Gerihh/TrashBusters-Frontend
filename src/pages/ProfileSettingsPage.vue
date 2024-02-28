@@ -50,7 +50,7 @@
           square
           filled
           clearable
-          v-model="oldpassword"
+          v-model="oldPassword"
           type="password"
           label="Régi jelszó"
         />
@@ -58,7 +58,7 @@
           square
           filled
           clearable
-          v-model="newpassword"
+          v-model="newPassword"
           type="password"
           label="Új jelszó"
         />
@@ -66,7 +66,7 @@
           square
           filled
           clearable
-          v-model="newpasswordAgain"
+          v-model="newPasswordAgain"
           type="password"
           label="Új jelszó mégegyszer"
         />
@@ -100,9 +100,9 @@ export default defineComponent({
       deleteConfirmationVisible: false,
       profilePicture: null,
       passwordChangeVisible: false,
-      oldpassword: "",
-      newpassword: "",
-      newpasswordAgain: "",
+      oldPassword: "",
+      newPassword: "",
+      newPasswordAgain: "",
     };
   },
   mounted() {
@@ -161,20 +161,22 @@ export default defineComponent({
     },
     async changePassword() {
   try {
-    // Send the old and new passwords to the server
     const response = await axios.post(`/api/change-password/${this.user.id}`, {
-      oldpassword: this.oldpassword,
-      newpassword: this.newpassword,
+      oldPassword: this.oldPassword,
+      newPassword: this.newPassword,
+      newPasswordAgain: this.newPasswordAgain,
     });
 
-    if (response.data.message === "Password changed successfully") {
-      alert("Jelszó sikeresen megváltoztatva");
-      this.passwordChangeVisible = false;
-    } else {
-      console.log(response.data.error);
-    }
+    alert(response.data.message);
+    this.oldPassword = "";
+    this.newPassword = "";
+    this.newPasswordAgain = "";
+    this.passwordChangeVisible = false;
   } catch (error) {
-    console.error("Hiba a jelszó megváltoztatásakor:", error);
+    alert(error.response.data.error);
+    this.oldPassword = "";
+    this.newPassword = "";
+    this.newPasswordAgain = "";
   }
 },
 
