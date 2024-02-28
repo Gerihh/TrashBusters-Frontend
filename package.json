@@ -16,6 +16,7 @@
     "@quasar/cli": "^2.3.0",
     "@quasar/extras": "^1.16.9",
     "axios": "^1.6.5",
+    "bcryptjs": "^2.4.3",
     "js-cookie": "^3.0.5",
     "moment": "^2.30.1",
     "quasar": "^2.6.0",

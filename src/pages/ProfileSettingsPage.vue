@@ -1,18 +1,27 @@
 <template>
   <div class="q-ma-lg flex justify-center">
+    <input type="file" @change="handleFileChange" />
+  </div>
+  <div class="q-ma-lg flex justify-center">
+    <button @click="uploadProfilePicture">Upload Profile Picture</button>
+  </div>
+
+  <div class="q-ma-lg flex justify-center">
+    <q-btn
+      @click="showChangePassword"
+      label="Jelszó megváltoztatása"
+      color="green"
+      class="q-ma-lg"
+    />
+  </div>
+
+  <div class="q-ma-lg flex justify-center">
     <q-btn
       @click="showDeleteConfirmation"
       label="Profil törlése"
       color="red"
       class="q-ma-lg"
     />
-  </div>
-
-  <div class="q-ma-lg flex justify-center">
-    <input type="file" @change="handleFileChange" />
-  </div>
-  <div class="q-ma-lg flex justify-center">
-    <button @click="uploadProfilePicture">Upload Profile Picture</button>
   </div>
 
   <q-dialog v-model="deleteConfirmationVisible">
@@ -25,6 +34,53 @@
         <q-space />
         <q-btn label="Igen" color="red" @click="confirmDelete" />
       </q-card-actions>
+    </q-card>
+  </q-dialog>
+
+  <q-dialog v-model="passwordChangeVisible">
+    <q-card
+      square
+      bordered
+      class="q-pa-md shadow-1"
+      :class="{ 'q-ma-lg': $q.screen.width > 1024 }"
+      :style="{ width: $q.screen.width > 1024 ? '500px' : '250px' }"
+    >
+      <q-form class="q-gutter-md" @submit="changePassword">
+        <q-input
+          square
+          filled
+          clearable
+          v-model="oldpassword"
+          type="password"
+          label="Régi jelszó"
+        />
+        <q-input
+          square
+          filled
+          clearable
+          v-model="newpassword"
+          type="password"
+          label="Új jelszó"
+        />
+        <q-input
+          square
+          filled
+          clearable
+          v-model="newpasswordAgain"
+          type="password"
+          label="Új jelszó mégegyszer"
+        />
+        <q-card-section>
+          <q-btn
+            type="submit"
+            unelevated
+            color="light-green-7"
+            size="lg"
+            class="full-width"
+            label="Jelszó megváltoztatása"
+          />
+        </q-card-section>
+      </q-form>
     </q-card>
   </q-dialog>
 </template>
@@ -43,6 +99,10 @@ export default defineComponent({
       user: null,
       deleteConfirmationVisible: false,
       profilePicture: null,
+      passwordChangeVisible: false,
+      oldpassword: "",
+      newpassword: "",
+      newpasswordAgain: "",
     };
   },
   mounted() {
@@ -55,19 +115,18 @@ export default defineComponent({
     },
     uploadProfilePicture() {
       const formData = new FormData();
-      formData.append('profilePicture', this.profilePicture);
+      formData.append("profilePicture", this.profilePicture);
 
-      axios.post(`/api/upload/${this.user.id}`, formData)
-        .then(response => {
+      axios
+        .post(`/api/upload/${this.user.id}`, formData)
+        .then((response) => {
           this.user.profilePictureURL = response.data.url;
 
           Cookies.set("user", JSON.stringify(this.user));
-          console.log('File uploaded successfully:', response.data.url);
-
+          console.log("File uploaded successfully:", response.data.url);
         })
-        .catch(error => {
-          console.error('Error uploading file:', error);
-
+        .catch((error) => {
+          console.error("Error uploading file:", error);
         });
     },
     showDeleteConfirmation() {
@@ -75,6 +134,9 @@ export default defineComponent({
     },
     cancelDelete() {
       this.deleteConfirmationVisible = false;
+    },
+    showChangePassword() {
+      this.passwordChangeVisible = true;
     },
     async confirmDelete() {
       try {
@@ -97,6 +159,25 @@ export default defineComponent({
       this.logout();
       this.deleteConfirmationVisible = false;
     },
+    async changePassword() {
+  try {
+    // Send the old and new passwords to the server
+    const response = await axios.post(`/api/change-password/${this.user.id}`, {
+      oldpassword: this.oldpassword,
+      newpassword: this.newpassword,
+    });
+
+    if (response.data.message === "Password changed successfully") {
+      alert("Jelszó sikeresen megváltoztatva");
+      this.passwordChangeVisible = false;
+    } else {
+      console.log(response.data.error);
+    }
+  } catch (error) {
+    console.error("Hiba a jelszó megváltoztatásakor:", error);
+  }
+},
+
     logout() {
       useAuth.isLoggedIn.value = false;
       Cookies.remove("token", { path: "/" });
