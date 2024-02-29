@@ -32,6 +32,10 @@ const routes = [
         path: "user/:id",
         component: () => import("pages/SearchedUserPage.vue"),
       },
+      {
+        path: "password-recovery/:token",
+        component: () => import("pages/PasswordRecoveryPage.vue"),
+      },
     ],
   },
   {
