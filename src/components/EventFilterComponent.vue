@@ -125,23 +125,111 @@
         </div>
       </q-card-section>
       <q-card-actions class="q-gutter-sm">
-        <q-btn
-          class="q-col q-ma-md"
-          label="Bezárás"
-          color="red"
-          @click="closeCard"
-        />
+        <div style="margin: 0px">
+          <q-btn
+            class="q-col q-ma-md"
+            label="Bezárás"
+            color="red"
+            @click="closeCard"
+          />
+        </div>
         <q-space />
-        <q-tooltip v-if="pairExists" anchor="bottom right" self="bottom right">
-          <span style="font-size: 12px">Már csatlakozott az eseményhez</span>
-        </q-tooltip>
-        <q-btn
-          class="q-col q-ma-md"
-          label="Csatlakozás"
-          color="green"
-          @click="joinEvent"
-          :disabled="pairExists"
-        />
+        <div style="margin: 0px">
+          <q-tooltip
+            v-if="selectedRow.participants == 0"
+            anchor="bottom right"
+            self="bottom right"
+          >
+            <span style="font-size: 12px">Az eseménynek nincsenek tagjai</span>
+          </q-tooltip>
+          <q-btn
+            class="q-col q-ma-md"
+            label="Résztvevők"
+            color="orange-5"
+            @click="openParticipantsCard"
+            :disabled="selectedRow.participants == 0"
+          />
+        </div>
+        <q-space />
+        <div style="margin: 0px">
+          <q-tooltip
+            v-if="pairExists"
+            anchor="bottom right"
+            self="bottom right"
+          >
+            <span style="font-size: 12px">Már csatlakozott az eseményhez</span>
+          </q-tooltip>
+          <q-btn
+            class="q-col q-ma-md"
+            label="Csatlakozás"
+            color="green"
+            @click="joinEvent"
+            :disabled="pairExists"
+          />
+        </div>
+      </q-card-actions>
+    </q-card>
+  </q-dialog>
+
+  <q-dialog v-model="participantsCardVsible">
+    <q-card
+      class="q-ma-md justify-center"
+      :class="{ 'q-ma-lg': $q.screen.width > 1024 }"
+      :style="{ width: $q.screen.width > 1024 ? '500px' : '270px' }"
+    >
+      <q-card-section>
+        <div v-if="participants.length > 0 && !loading">
+          <q-card-section>
+            <h2 class="text-h6 q-mb-md text-center">{{ selectedRow.title }}</h2>
+            <div class="q-mb-md" style="max-height: 180px; overflow-y: auto; margin: -25px;">
+              <!-- Set a maximum height for the list and make it scrollable -->
+              <ul style="list-style-type: none; padding: 0; margin: 0">
+                <li v-for="participant in participants" :key="participant.id">
+                  <div
+                    class="flex items-start"
+                    @click="openUserProfile(participant.id)"
+                  >
+                    <div class="q-mr-md">
+                      <!-- Set the participant's profile picture as the source -->
+                      <img
+                        :src="participant.profilePictureURL"
+                        alt="Participant Avatar"
+                        class="avatar"
+                        style="
+                          max-width: 30px;
+                          max-height: 30px;
+                          border-radius: 50%;
+                        "
+                      />
+                      <!-- You can provide a default image if the profile picture is not available -->
+                    </div>
+                    <div>
+                      <p
+                        class="clickable text-purple-10"
+                        style="text-decoration: underline; cursor: pointer"
+                      >
+                        {{ participant.username }}
+                      </p>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </q-card-section>
+        </div>
+        <div v-if="participants.length === 0 && !loading">
+          <p>No participants for this event.</p>
+        </div>
+      </q-card-section>
+      <q-card-actions class="q-gutter-sm flex justify-center">
+        <div>
+          <q-btn
+            class="q-col q-ma-md"
+            label="Bezárás"
+            color="red"
+            @click="closeParticipantsCard"
+          />
+        </div>
       </q-card-actions>
     </q-card>
   </q-dialog>
@@ -203,6 +291,9 @@ export default {
       pairExists: false,
       user: null,
       searchButtonDisabled: false,
+      participantsCardVsible: false,
+      participants: [],
+      loading: true,
     };
   },
   mounted() {
@@ -347,6 +438,29 @@ export default {
       } catch (error) {
         console.error("Error checking if user is already joined:", error);
       }
+    },
+    openParticipantsCard() {
+      this.participantsCardVsible = true;
+      this.cardVisible = false;
+      this.getParticipantsByEventId();
+    },
+    async getParticipantsByEventId() {
+      try {
+        const response = await axios.get(
+          `/api/participants/event/${this.selectedRow.id}`
+        );
+        this.participants = response.data;
+        this.loading = false;
+      } catch (error) {
+        console.error("Error fetching participants:", error);
+      }
+    },
+    closeParticipantsCard() {
+      this.participantsCardVsible = false;
+      this.cardVisible = true;
+    },
+    openUserProfile(userId) {
+      this.$router.push(`/user/${userId}`);
     },
   },
 };

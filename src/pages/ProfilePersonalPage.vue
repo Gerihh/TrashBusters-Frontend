@@ -5,9 +5,12 @@
 
   <div class="q-ma-lg flex justify-center" v-if="user && !loading">
     <q-card class="flex justify-center" flat style="background-color: #fafafa">
-      <img :src="`${user.profilePictureURL}?${Date.now()}`" alt="Profilkép"
-        style="border-radius: 50%; max-height: 300px; max-width: 300px" />
-      <q-card-section class="">
+      <img
+        :src="`${user.profilePictureURL}?${Date.now()}`"
+        alt="Profilkép"
+        style="border-radius: 50%; max-height: 300px; max-width: 300px"
+      />
+      <q-card-section class="flex justify-center">
         <div class="text-h6 text-center">
           {{ user.username }} #{{ user.id }}
         </div>
@@ -17,29 +20,50 @@
 
   <div v-if="!loading">
     <div class="q-mt-md q-ma-lg" v-if="eventsCreatedByUser.length > 0">
-      <q-table :rows="eventsCreatedByUser" :columns="columns" row-key="id" @row-click="openCardCreator"
-        :rows-per-page-options="[5]" title="Szervező vagyok" style="min-width: 250px" />
+      <q-table
+        :rows="eventsCreatedByUser"
+        :columns="columns"
+        row-key="id"
+        @row-click="openCardCreator"
+        :rows-per-page-options="[5]"
+        title="Szervező vagyok"
+        style="min-width: 250px"
+      />
     </div>
     <div class="q-mt-md q-ma-lg" v-else>
-      <q-table title="Szervező vagyok" no-data-label="Jelenleg nem szervez egyetlen eseményt sem" />
+      <q-table
+        title="Szervező vagyok"
+        no-data-label="Jelenleg nem szervez egyetlen eseményt sem"
+      />
     </div>
 
     <div class="q-mt-md q-ma-lg" v-if="eventsJoinedByUser.length > 0">
-      <q-table :rows="eventsJoinedByUser" :columns="columns" row-key="id" @row-click="openCardParticipant"
-        :rows-per-page-options="[5]" title="Résztvevő vagyok"
-        no-data-label="Jelenleg nem vesz részt egyetlen eseményen sem" />
+      <q-table
+        :rows="eventsJoinedByUser"
+        :columns="columns"
+        row-key="id"
+        @row-click="openCardParticipant"
+        :rows-per-page-options="[5]"
+        title="Résztvevő vagyok"
+        no-data-label="Jelenleg nem vesz részt egyetlen eseményen sem"
+      />
     </div>
     <div class="q-mt-md q-ma-lg" v-else>
-      <q-table title="Résztvevő vagyok" no-data-label="Jelenleg nem vesz részt egyetlen eseményen sem" />
+      <q-table
+        title="Résztvevő vagyok"
+        no-data-label="Jelenleg nem vesz részt egyetlen eseményen sem"
+      />
     </div>
   </div>
 
   <q-dialog v-model="cardVisible">
     <div class="q-ma-lg" :class="{ 'q-ma-lg': $q.screen.width > 1024 }">
-      <div :style="{
-        width: $q.screen.width > 1024 ? '500px' : '300px',
-        margin: 'auto',
-      }">
+      <div
+        :style="{
+          width: $q.screen.width > 1024 ? '500px' : '300px',
+          margin: 'auto',
+        }"
+      >
         <q-card style="min-width: 200px; max-width: 400px; width: 100%">
           <q-card-section>
             <div v-if="selectedRow">
@@ -65,18 +89,73 @@
             </div>
           </q-card-section>
 
-          <q-card-actions v-if="openedFromCreator" class="q-gutter-sm flex justify-center">
-            <q-btn class="q-col q-ma-md" label="Esemény törlése" color="red" @click="showDeleteConfirmation" />
-            <q-btn v-if="openedFromCreator" class="q-col q-ma-md" label="Esemény szerkesztése" color="orange-5"
-              @click="editEvent" />
-            <q-btn class="q-col q-ma-md" label="Bezárás" color="red" @click="closeCard" />
+          <q-card-actions
+            v-if="openedFromCreator"
+            class="q-gutter-sm flex justify-center"
+          >
+            <div>
+              <q-tooltip
+                v-if="selectedRow.participants == 0"
+                anchor="bottom right"
+                self="bottom right"
+              >
+                <span style="font-size: 12px"
+                  >Az eseménynek nincsenek tagjai</span
+                >
+              </q-tooltip>
+              <q-btn
+                class="q-col q-ma-md"
+                label="Résztvevők"
+                color="orange-5"
+                @click="openParticipantsCard"
+                :disabled="selectedRow.participants == 0"
+              />
+            </div>
+            <q-btn
+              v-if="openedFromCreator"
+              class="q-col q-ma-md"
+              label="Esemény szerkesztése"
+              color="orange-5"
+              @click="editEvent"
+            />
+            <q-btn
+              class="q-col q-ma-md"
+              label="Esemény törlése"
+              color="red"
+              @click="showDeleteConfirmation"
+            />
+
+            <q-btn
+              class="q-col q-ma-md"
+              label="Bezárás"
+              color="red"
+              @click="closeCard"
+            />
           </q-card-actions>
           <q-card-actions v-else class="q-gutter-sm column justify-center">
-
-
-            <q-btn class="q-col q-ma-sm" label="Esemény elhagyása" color="red" @click="showLeaveConfirmation" />
+            <q-btn
+              class="q-col q-ma-sm"
+              label="Esemény elhagyása"
+              color="red"
+              @click="showLeaveConfirmation"
+            />
             <q-space />
-            <q-btn class="q-col q-ma-sm" label="Bezárás" color="red" @click="closeCard" />
+
+            <q-btn
+              class="q-col q-ma-md"
+              label="Résztvevők"
+              color="orange-5"
+              @click="openParticipantsCard"
+              :disabled="selectedRow.participants == 0"
+            />
+
+            <q-space />
+            <q-btn
+              class="q-col q-ma-sm"
+              label="Bezárás"
+              color="red"
+              @click="closeCard"
+            />
           </q-card-actions>
         </q-card>
       </div>
@@ -111,51 +190,190 @@
 
   <q-dialog v-model="editEventVisible">
     <div class="q-mt-md q-ma-lg flex justify-center">
-    <q-card
-      square
-      bordered
-      class="q-pa-sm"
-      :class="{ 'q-ma-lg': $q.screen.width > 1024 }"
-      :style="{ width: $q.screen.width > 1024 ? '500px' : '250px' }"
-    >
-    <q-btn v-if="$q.screen.width > 1024"
-        round
-        icon="close"
-        color="red"
-        size="md"
-        style="top: -20px; right: -480px; margin: -10px;"
-        @click="editEventVisible = false; cardVisible = true"
-      />
-      <q-btn v-if="$q.screen.width < 1024"
-        round
-        icon="close"
-        color="red"
-        size="md"
-        style="top: -20px; right: -230px; margin: -10px"
-        @click="editEventVisible = false"
-      />
+      <q-card
+        square
+        bordered
+        class="q-pa-sm"
+        :class="{ 'q-ma-lg': $q.screen.width > 1024 }"
+        :style="{ width: $q.screen.width > 1024 ? '500px' : '250px' }"
+      >
+        <q-btn
+          v-if="$q.screen.width > 1024"
+          round
+          icon="close"
+          color="red"
+          size="md"
+          style="top: -20px; right: -480px; margin: -10px"
+          @click="
+            editEventVisible = false;
+            cardVisible = true;
+          "
+        />
+        <q-btn
+          v-if="$q.screen.width < 1024"
+          round
+          icon="close"
+          color="red"
+          size="md"
+          style="top: -20px; right: -230px; margin: -10px"
+          @click="editEventVisible = false"
+        />
         <q-form @submit.prevent="updateEvent">
-          <q-input square filled clearable v-model="editedEvent.title" type="title" :key="title" label="Cím" required
-            class="q-ma-sm" />
-          <q-input square filled clearable v-model="editedEvent.description" type="description" :key="description"
-            label="Leírás" class="q-ma-sm" />
-          <q-input square filled clearable v-model="editedEvent.location" type="location" label="Város" :key="location"
-            required class="q-ma-sm" />
-          <q-input square filled clearable v-model="editedEvent.place" type="place" label="Utca, tér" :key="place"
-            required class="q-ma-sm" />
-          <q-input square filled clearable v-model="editedEvent.date" type="date" label="Dátum" :key="date" :min="minDate"
-            required class="q-ma-sm" />
-          <q-input square filled clearable v-model="editedEvent.time" type="time" :key="time" label="Időpont" required
-            class="q-ma-sm" />
-          <q-input square filled clearable v-model="editedEvent.dumpId" type="dumpId" :key="dumpId"
-            label="Lerakó azonosítója" class="q-ma-sm" />
+          <q-input
+            square
+            filled
+            clearable
+            v-model="editedEvent.title"
+            type="title"
+            :key="title"
+            label="Cím"
+            required
+            class="q-ma-sm"
+          />
+          <q-input
+            square
+            filled
+            clearable
+            v-model="editedEvent.description"
+            type="description"
+            :key="description"
+            label="Leírás"
+            class="q-ma-sm"
+          />
+          <q-input
+            square
+            filled
+            clearable
+            v-model="editedEvent.location"
+            type="location"
+            label="Város"
+            :key="location"
+            required
+            class="q-ma-sm"
+          />
+          <q-input
+            square
+            filled
+            clearable
+            v-model="editedEvent.place"
+            type="place"
+            label="Utca, tér"
+            :key="place"
+            required
+            class="q-ma-sm"
+          />
+          <q-input
+            square
+            filled
+            clearable
+            v-model="editedEvent.date"
+            type="date"
+            label="Dátum"
+            :key="date"
+            :min="minDate"
+            required
+            class="q-ma-sm"
+          />
+          <q-input
+            square
+            filled
+            clearable
+            v-model="editedEvent.time"
+            type="time"
+            :key="time"
+            label="Időpont"
+            required
+            class="q-ma-sm"
+          />
+          <q-input
+            square
+            filled
+            clearable
+            v-model="editedEvent.dumpId"
+            type="dumpId"
+            :key="dumpId"
+            label="Lerakó azonosítója"
+            class="q-ma-sm"
+          />
           <q-card-section>
-            <q-btn type="submit" unelevated color="green-7" size="lg" class="full-width q-mt-sm"
-              label="Esemény frissítése" />
+            <q-btn
+              type="submit"
+              unelevated
+              color="green-7"
+              size="lg"
+              class="full-width q-mt-sm"
+              label="Esemény frissítése"
+            />
           </q-card-section>
         </q-form>
       </q-card>
     </div>
+  </q-dialog>
+
+  <q-dialog v-model="participantsCardVsible">
+    <q-card
+      class="q-ma-md justify-center"
+      :class="{ 'q-ma-lg': $q.screen.width > 1024 }"
+      :style="{ width: $q.screen.width > 1024 ? '500px' : '270px' }"
+    >
+      <q-card-section>
+        <div v-if="participants.length > 0 && !loading">
+          <q-card-section>
+            <h2 class="text-h6 q-mb-md text-center">{{ selectedRow.title }}</h2>
+            <div
+              class="q-mb-md"
+              style="max-height: 180px; overflow-y: auto; margin: -25px"
+            >
+              <!-- Set a maximum height for the list and make it scrollable -->
+              <ul style="list-style-type: none; padding: 0; margin: 0">
+                <li v-for="participant in participants" :key="participant.id">
+                  <div
+                    class="flex items-start"
+                    @click="openUserProfile(participant.id)"
+                  >
+                    <div class="q-mr-md">
+                      <!-- Set the participant's profile picture as the source -->
+                      <img
+                        :src="participant.profilePictureURL"
+                        alt="Participant Avatar"
+                        class="avatar"
+                        style="
+                          max-width: 30px;
+                          max-height: 30px;
+                          border-radius: 50%;
+                        "
+                      />
+                      <!-- You can provide a default image if the profile picture is not available -->
+                    </div>
+                    <div>
+                      <p
+                        class="clickable text-purple-10"
+                        style="text-decoration: underline; cursor: pointer"
+                      >
+                        {{ participant.username }}
+                      </p>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </q-card-section>
+        </div>
+        <div v-if="participants.length === 0 && !loading">
+          <p>No participants for this event.</p>
+        </div>
+      </q-card-section>
+      <q-card-actions class="q-gutter-sm flex justify-center">
+        <div>
+          <q-btn
+            class="q-col q-ma-md"
+            label="Bezárás"
+            color="red"
+            @click="closeParticipantsCard"
+          />
+        </div>
+      </q-card-actions>
+    </q-card>
   </q-dialog>
 </template>
 
@@ -226,7 +444,8 @@ export default defineComponent({
         dumpId: "",
       },
       minDate: "",
-
+      participantsCardVsible: false,
+      participants: [],
     };
   },
   mounted() {
@@ -412,6 +631,29 @@ export default defineComponent({
     cancelLeave() {
       this.leavingConfirmationVisible = false;
       this.cardVisible = true;
+    },
+    openParticipantsCard() {
+      this.participantsCardVsible = true;
+      this.cardVisible = false;
+      this.getParticipantsByEventId();
+    },
+    async getParticipantsByEventId() {
+      try {
+        const response = await axios.get(
+          `/api/participants/event/${this.selectedRow.id}`
+        );
+        this.participants = response.data;
+        this.loading = false;
+      } catch (error) {
+        console.error("Error fetching participants:", error);
+      }
+    },
+    closeParticipantsCard() {
+      this.participantsCardVsible = false;
+      this.cardVisible = true;
+    },
+    openUserProfile(userId) {
+      this.$router.push(`/user/${userId}`);
     },
   },
 });
