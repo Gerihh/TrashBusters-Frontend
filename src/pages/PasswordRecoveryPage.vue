@@ -84,15 +84,15 @@ export default defineComponent({
     async resetPassword() {
       try {
         if (this.newPassword === this.newPasswordAgain) {
-          await axios.patch(`/api/users/${this.userId}`, {
+          const response = await axios.patch(`/api/users/${this.userId}`, {
             password: this.newPassword,
             passwordResetToken: null,
           });
-          window.alert("A jelszó sikeresen helyreállítva!");
+          alert("A jelszó sikeresen helyreállítva!");
           this.$router.push("/login");
         }
       } catch (error) {
-        console.log(error);
+        alert(error);
       }
     },
   },
