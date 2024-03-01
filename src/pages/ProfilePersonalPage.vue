@@ -4,13 +4,17 @@
   </div>
 
   <div class="q-ma-lg flex justify-center" v-if="user && !loading">
-    <q-card class="flex justify-center" flat style="background-color: #fafafa">
-      <img
-        :src="`${user.profilePictureURL}?${Date.now()}`"
-        alt="Profilkép"
-        style="border-radius: 50%; max-height: 300px; max-width: 300px"
-      />
-      <q-card-section class="flex justify-center">
+    <q-card
+      class="flex flex-column items-center"
+      flat
+      style="background-color: #fafafa"
+    >
+      <q-card-section>
+        <img
+          :src="`${user.profilePictureURL}?${Date.now()}`"
+          alt="Profilkép"
+          style="border-radius: 50%; height: 300px; width: 300px"
+        />
         <div class="text-h6 text-center">
           {{ user.username }} #{{ user.id }}
         </div>
@@ -100,7 +104,7 @@
                 self="bottom right"
               >
                 <span style="font-size: 12px"
-                  >Az eseménynek nincsenek tagjai</span
+                  >Az eseménynek nincsenek résztvevői</span
                 >
               </q-tooltip>
               <q-btn
@@ -338,8 +342,8 @@
                         alt="Participant Avatar"
                         class="avatar"
                         style="
-                          max-width: 30px;
-                          max-height: 30px;
+                          width: 30px;
+                          height: 30px;
                           border-radius: 50%;
                         "
                       />
@@ -359,7 +363,7 @@
             </div>
           </q-card-section>
         </div>
-        <div v-if="participants.length === 0 && !loading">
+        <div v-if="participants.length === 0 && loading">
           <p>No participants for this event.</p>
         </div>
       </q-card-section>
@@ -548,7 +552,14 @@ export default defineComponent({
         await axios.delete(
           `/api/participants/delete/${this.selectedRow.id}/${this.user.id}`
         );
-        this.participantLeft();
+        const response = await axios.get(
+          `/api/participants/event/${this.selectedRow.id}`
+        );
+        const participantCount = response.data.count;
+
+        await axios.patch(`/api/events/${this.selectedRow.id}`, {
+          participants: participantCount,
+        });
         alert("Sikeresen elhagyta az eseményt!");
         this.closeCard();
         window.location.reload();
@@ -556,11 +567,6 @@ export default defineComponent({
         console.error("Error leaving event:", error);
       }
       this.showLeaveConfirmation = false;
-    },
-    async participantLeft() {
-      await axios.patch(`api/events/${this.selectedRow.id}`, {
-        participants: this.selectedRow.participants - 1,
-      });
     },
     async fetchEventData() {
       try {
@@ -632,10 +638,13 @@ export default defineComponent({
       this.leavingConfirmationVisible = false;
       this.cardVisible = true;
     },
-    openParticipantsCard() {
+    async openParticipantsCard() {
       this.participantsCardVsible = true;
       this.cardVisible = false;
       this.getParticipantsByEventId();
+      const response = await axios.get(`/api/participants/event/${this.selectedRow.id}`);
+
+      this.participants = response.data.users;
     },
     async getParticipantsByEventId() {
       try {

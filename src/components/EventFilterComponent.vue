@@ -140,7 +140,9 @@
             anchor="bottom right"
             self="bottom right"
           >
-            <span style="font-size: 12px">Az eseménynek nincsenek tagjai</span>
+            <span style="font-size: 12px"
+              >Az eseménynek nincsenek résztvevői</span
+            >
           </q-tooltip>
           <q-btn
             class="q-col q-ma-md"
@@ -181,7 +183,10 @@
         <div v-if="participants.length > 0 && !loading">
           <q-card-section>
             <h2 class="text-h6 q-mb-md text-center">{{ selectedRow.title }}</h2>
-            <div class="q-mb-md" style="max-height: 180px; overflow-y: auto; margin: -25px;">
+            <div
+              class="q-mb-md"
+              style="max-height: 180px; overflow-y: auto; margin: -25px"
+            >
               <!-- Set a maximum height for the list and make it scrollable -->
               <ul style="list-style-type: none; padding: 0; margin: 0">
                 <li v-for="participant in participants" :key="participant.id">
@@ -195,11 +200,7 @@
                         :src="participant.profilePictureURL"
                         alt="Participant Avatar"
                         class="avatar"
-                        style="
-                          max-width: 30px;
-                          max-height: 30px;
-                          border-radius: 50%;
-                        "
+                        style="width: 30px; height: 30px; border-radius: 50%"
                       />
                       <!-- You can provide a default image if the profile picture is not available -->
                     </div>
@@ -366,11 +367,6 @@ export default {
       this.selectedRow = null;
       this.cardVisible = false;
     },
-    async participantJoined() {
-      await axios.patch(`api/events/${this.selectedRow.id}`, {
-        participants: this.selectedRow.participants + 1,
-      });
-    },
     async joinEvent() {
       try {
         const user = JSON.parse(Cookies.get("user"));
@@ -380,12 +376,20 @@ export default {
         }
 
         this.userId = user.id;
-
+        const response = await axios.get(
+          `/api/participants/event/${this.selectedRow.id}`
+        );
+        const participantCount = response.data.count;
         await axios.post("/api/participants", {
           eventId: this.selectedRow.id,
           userId: this.userId,
         });
-        this.participantJoined();
+        await axios.patch(`/api/events/${this.selectedRow.id}`, {
+          participants: participantCount + 1,
+        });
+
+        this.participants = response.data.users
+
         alert("Sikeresen csatlakozott az eseményhez!");
         window.location.reload();
         this.closeCard();
@@ -439,10 +443,13 @@ export default {
         console.error("Error checking if user is already joined:", error);
       }
     },
-    openParticipantsCard() {
+    async openParticipantsCard() {
       this.participantsCardVsible = true;
       this.cardVisible = false;
       this.getParticipantsByEventId();
+      const response = await axios.get(`/api/participants/event/${this.selectedRow.id}`);
+
+      this.participants = response.data.users;
     },
     async getParticipantsByEventId() {
       try {
