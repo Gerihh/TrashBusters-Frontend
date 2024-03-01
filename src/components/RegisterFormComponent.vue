@@ -88,7 +88,7 @@ export default {
           useAuth.isLoggedIn.value == true;
 
           this.$router.push("/login");
-          console.log("Sikeres regisztráció");
+          alert("Sikeres regisztráció");
         } catch (error) {
           console.error("Hibás regisztráció:", error);
           this.email = "";
