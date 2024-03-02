@@ -1,65 +1,98 @@
 <template>
-  <div class="q-ma-lg">
-    <div class="q-gutter-lg row flex justify-center">
-      <q-input
-        v-model="searchTitle"
-        filled
-        clearable
-        type="search"
-        label="Esemény neve"
-      />
-      <q-input v-model="searchCity" clearable label="Város" filled />
-      <q-input v-model="searchAddress" clearable label="Utca, tér" filled />
-      <q-input
-        v-model.number="model"
-        type="number"
-        filled
-        label="Min. résztvevők"
-        :min="0"
-      />
-      <q-input v-model="date" type="date" filled label="Dátum" :min="minDate" />
-    </div>
-    <div class="q-ma-lg q-gutter-lg row flex justify-center">
-      <div>
-        <q-tooltip
-          v-if="checkInputFields"
-          anchor="bottom left"
-          self="bottom middle"
-        >
-          <span style="font-size: 12px"
-            >Használja valamelyik kategóriaszűrőt</span
-          >
-        </q-tooltip>
-        <q-btn
-          @click="searchData"
-          label="Keresés"
-          color="green"
-          style="padding: 10px; width: 100px"
-          :disabled="checkInputFields"
+  <div class="q-ma-lg" :class="{ 'q-ma-lg': $q.screen.width > 1024 }">
+    <div
+      :style="{
+        width: $q.screen.width > 1024 ? '1000px' : '300px',
+        margin: 'auto',
+      }"
+    >
+      <div class="q-gutter-md flex justify-center">
+        <q-input
+          v-model="searchTitle"
+          filled
+          clearable
+          type="search"
+          label="Esemény neve"
+          class="q-mb-md"
         />
-      </div>
-      <div>
-        <q-tooltip
-          v-if="checkInputFields"
-          anchor="bottom right"
-          self="bottom middle"
-        >
-          <span style="font-size: 12px"
-            >Használja valamelyik kategóriaszűrőt</span
-          >
-        </q-tooltip>
-        <q-btn
-          @click="filterReset"
-          label="Szűrők törlése"
-          color="red"
-          style="padding: 10px"
-          :disabled="checkInputFields"
+        <q-input
+          v-model="searchCity"
+          clearable
+          label="Város"
+          filled
+          class="q-mb-md"
         />
+        <q-input
+          v-model="searchAddress"
+          clearable
+          label="Utca, tér"
+          filled
+          class="q-mb-md"
+        />
+        <q-input
+          v-model.number="model"
+          type="number"
+          filled
+          label="Min. résztvevők"
+          :min="0"
+          class="q-mb-md"
+        />
+        <q-input
+          v-model="date"
+          type="date"
+          filled
+          label="Dátum"
+          :min="minDate"
+          class="q-mb-md"
+        />
+
+        <div class="q-ma-lg q-gutter-md row flex justify-center">
+          <div>
+            <q-tooltip
+              v-if="checkInputFields"
+              anchor="bottom left"
+              self="bottom middle"
+            >
+              <span style="font-size: 12px"
+                >Használja valamelyik kategóriaszűrőt</span
+              >
+            </q-tooltip>
+            <q-btn
+              @click="searchData"
+              label="Keresés"
+              color="green"
+              style="padding: 10px; width: 140px"
+              :disabled="checkInputFields"
+            />
+          </div>
+          <div>
+            <q-tooltip
+              v-if="checkInputFields"
+              anchor="bottom right"
+              self="bottom middle"
+            >
+              <span style="font-size: 12px"
+                >Használja valamelyik kategóriaszűrőt</span
+              >
+            </q-tooltip>
+            <q-btn
+              @click="filterReset"
+              label="Szűrők törlése"
+              color="red"
+              style="padding: 10px; width: 140px"
+              :disabled="checkInputFields"
+            />
+          </div>
+        </div>
       </div>
     </div>
   </div>
   <div v-if="filteredData.length > 0" class="q-ma-lg" style="margin-top: 80px">
     <q-table
+      :style="{
+        width: $q.screen.width > 1024 ? '1700px' : '270px',
+        margin: 'auto',
+      }"
       :rows="filteredData"
       :columns="columns"
       row-key="id"
@@ -69,7 +102,11 @@
     />
   </div>
   <q-dialog v-model="cardVisible">
-    <q-card class="q-ma-md justify-center" style="min-width: 450px">
+    <q-card
+      class="q-ma-md justify-center"
+      :class="{ 'q-ma-lg': $q.screen.width > 1024 }"
+      :style="{ width: $q.screen.width > 1024 ? '500px' : '270px' }"
+    >
       <q-card-section>
         <div v-if="selectedRow">
           <h2 class="text-h6 q-mb-md text-center">{{ selectedRow.title }}</h2>
@@ -88,26 +125,113 @@
           <div class="q-mb-md">
             <strong>Szervező:</strong> {{ creatorName }}
           </div>
+          <div class="q-mb-md"><strong>Lerakó:</strong> {{ dumpName }}</div>
         </div>
       </q-card-section>
       <q-card-actions class="q-gutter-sm">
-        <q-btn
-          class="q-col q-ma-md"
-          label="Bezárás"
-          color="red"
-          @click="closeCard"
-        />
+        <div style="margin: 0px">
+          <q-btn
+            class="q-col q-ma-md"
+            label="Bezárás"
+            color="red"
+            @click="closeCard"
+          />
+        </div>
         <q-space />
-        <q-tooltip v-if="pairExists" anchor="bottom right" self="bottom right">
-          <span style="font-size: 12px">Már csatlakozott az eseményhez</span>
-        </q-tooltip>
-        <q-btn
-          class="q-col q-ma-md"
-          label="Csatlakozás"
-          color="green"
-          @click="joinEvent"
-          :disabled="pairExists"
-        />
+        <div style="margin: 0px">
+          <q-tooltip
+            v-if="selectedRow.participants == 0"
+            anchor="bottom right"
+            self="bottom right"
+          >
+            <span style="font-size: 12px"
+              >Az eseménynek nincsenek résztvevői</span
+            >
+          </q-tooltip>
+          <q-btn
+            class="q-col q-ma-md"
+            label="Résztvevők"
+            color="orange-5"
+            @click="openParticipantsCard"
+            :disabled="selectedRow.participants == 0"
+          />
+        </div>
+        <q-space />
+        <div style="margin: 0px">
+          <q-tooltip
+            v-if="pairExists"
+            anchor="bottom right"
+            self="bottom right"
+          >
+            <span style="font-size: 12px">Már csatlakozott az eseményhez</span>
+          </q-tooltip>
+          <q-btn
+            class="q-col q-ma-md"
+            label="Csatlakozás"
+            color="green"
+            @click="joinEvent"
+            :disabled="pairExists"
+          />
+        </div>
+      </q-card-actions>
+    </q-card>
+  </q-dialog>
+
+  <q-dialog v-model="participantsCardVsible">
+    <q-card
+      class="q-ma-md justify-center"
+      :class="{ 'q-ma-lg': $q.screen.width > 1024 }"
+      :style="{ width: $q.screen.width > 1024 ? '500px' : '270px' }"
+    >
+      <q-card-section>
+        <div v-if="participants.length > 0 && !loading">
+          <q-card-section>
+            <h2 class="text-h6 q-mb-md text-center">{{ selectedRow.title }}</h2>
+            <div
+              class="q-mb-md"
+              style="max-height: 180px; overflow-y: auto; margin: -25px"
+            >
+              <ul style="list-style-type: none; padding: 0; margin: 0">
+                <li v-for="participant in participants" :key="participant.id">
+                  <div
+                    class="q-ma-md"
+                    style="display: flex; align-items: center"
+                    @click="openUserProfile(participant.id)"
+                  >
+                    <img
+                      :src="participant.profilePictureURL"
+                      alt="Participant Avatar"
+                      class="avatar q-mr-md"
+                      style="width: 30px; height: 30px; border-radius: 50%"
+                    />
+                    <p style="margin: 0">
+                      <span
+                        class="clickable text-purple-10"
+                        style="text-decoration: underline; cursor: pointer"
+                      >
+                        {{ participant.username }},
+                      </span>
+                      {{ participant.city }}
+                    </p>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </q-card-section>
+        </div>
+        <div v-if="participants.length === 0 && loading">
+          <p>No participants for this event.</p>
+        </div>
+      </q-card-section>
+      <q-card-actions class="q-gutter-sm flex justify-center">
+        <div>
+          <q-btn
+            class="q-col q-ma-md"
+            label="Bezárás"
+            color="red"
+            @click="closeParticipantsCard"
+          />
+        </div>
       </q-card-actions>
     </q-card>
   </q-dialog>
@@ -164,10 +288,14 @@ export default {
       selectedRow: null,
       userId: "",
       creatorName: null,
+      dumpName: null,
       minDate: "",
       pairExists: false,
       user: null,
       searchButtonDisabled: false,
+      participantsCardVsible: false,
+      participants: [],
+      loading: true,
     };
   },
   mounted() {
@@ -229,17 +357,16 @@ export default {
     },
     async openCard(event, row, columnIndex) {
       this.selectedRow = row;
-      await Promise.all([this.getCreatorName(), this.checkPairExists()]);
+      await Promise.all([
+        this.getCreatorName(),
+        this.checkPairExists(),
+        this.getDumpName(),
+      ]);
       this.cardVisible = true;
     },
     closeCard() {
       this.selectedRow = null;
       this.cardVisible = false;
-    },
-    async participantJoined() {
-      await axios.patch(`api/events/${this.selectedRow.id}`, {
-        participants: this.selectedRow.participants + 1,
-      });
     },
     async joinEvent() {
       try {
@@ -255,7 +382,18 @@ export default {
           eventId: this.selectedRow.id,
           userId: this.userId,
         });
-        this.participantJoined();
+
+        const response = await axios.get(
+          `/api/participants/event/${this.selectedRow.id}`
+        );
+
+        const participantCount = response.data.count;
+        await axios.patch(`/api/events/${this.selectedRow.id}`, {
+          participants: participantCount,
+        });
+
+        this.participants = response.data.users;
+
         alert("Sikeresen csatlakozott az eseményhez!");
         window.location.reload();
         this.closeCard();
@@ -283,6 +421,22 @@ export default {
         console.error("Error fetching creator name:", error);
       }
     },
+    async getDumpName() {
+      try {
+        if (!this.selectedRow || !this.selectedRow.dumpId) {
+          this.dumpName = "-";
+          return;
+        }
+
+        const response = await axios.get(
+          `/api/dump/name/${this.selectedRow.dumpId}`
+        );
+
+        this.dumpName = response.data;
+      } catch (error) {
+        console.error("Error fetching dump name:", error);
+      }
+    },
     async checkPairExists() {
       try {
         const response = await axios.get(
@@ -292,6 +446,34 @@ export default {
       } catch (error) {
         console.error("Error checking if user is already joined:", error);
       }
+    },
+    async openParticipantsCard() {
+      this.participantsCardVsible = true;
+      this.cardVisible = false;
+      this.getParticipantsByEventId();
+      const response = await axios.get(
+        `/api/participants/event/${this.selectedRow.id}`
+      );
+
+      this.participants = response.data.users;
+    },
+    async getParticipantsByEventId() {
+      try {
+        const response = await axios.get(
+          `/api/participants/event/${this.selectedRow.id}`
+        );
+        this.participants = response.data;
+        this.loading = false;
+      } catch (error) {
+        console.error("Error fetching participants:", error);
+      }
+    },
+    closeParticipantsCard() {
+      this.participantsCardVsible = false;
+      this.cardVisible = true;
+    },
+    openUserProfile(userId) {
+      this.$router.push(`/user/${userId}`);
     },
   },
 };

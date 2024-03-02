@@ -4,7 +4,8 @@
       square
       bordered
       class="q-pa-md shadow-1"
-      style="width: 500px; min-height: 100px"
+      :class="{ 'q-ma-lg': $q.screen.width > 1024 }"
+      :style="{ width: $q.screen.width > 1024 ? '500px' : '250px' }"
     >
       <q-form class="q-gutter-md" @submit="register">
         <q-input
@@ -22,6 +23,14 @@
           v-model="username"
           type="username"
           label="Felhasználónév"
+        />
+        <q-input
+          square
+          filled
+          clearable
+          v-model="city"
+          type="city"
+          label="Város"
         />
         <q-input
           square
@@ -70,6 +79,7 @@ export default {
     return {
       email: "",
       username: "",
+      city: "",
       password: "",
       passwordAgain: "",
     };
@@ -81,17 +91,19 @@ export default {
           await axios.post("/api/auth/register", {
             email: this.email,
             username: this.username,
+            city: this.city,
             password: this.password,
           });
 
           useAuth.isLoggedIn.value == true;
 
           this.$router.push("/login");
-          console.log("Sikeres regisztráció");
+          alert("Sikeres regisztráció");
         } catch (error) {
           console.error("Hibás regisztráció:", error);
           this.email = "";
           this.username = "";
+          this.city = "";
           this.password = "";
           this.passwordAgain = "";
         }

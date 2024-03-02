@@ -3,8 +3,10 @@
     <q-card
       square
       bordered
+      v-if="!forgotPassword"
       class="q-pa-md shadow-1"
-      style="width: 500px; height: 300px"
+      :class="{ 'q-ma-lg': $q.screen.width > 1024 }"
+      :style="{ width: $q.screen.width > 1024 ? '500px' : '270px' }"
     >
       <q-form class="q-gutter-md" @submit="login">
         <q-input
@@ -40,6 +42,53 @@
           <router-link to="/register">Tedd meg itt!</router-link>
         </p>
       </q-card-section>
+      <q-card-section class="text-center q-pa-none">
+        <p
+          class="text-purple-10"
+          style="text-decoration: underline; cursor: pointer"
+          @click="forgotPassword = true"
+        >
+          Elfelejtett jelszó
+        </p>
+      </q-card-section>
+    </q-card>
+    <q-card
+      square
+      bordered
+      v-else
+      class="q-pa-md shadow-1"
+      :class="{ 'q-ma-lg': $q.screen.width > 1024 }"
+      :style="{ width: $q.screen.width > 1024 ? '500px' : '270px' }"
+    >
+      <q-form class="q-gutter-md" @submit="sendPasswordResetEmail">
+        <q-input
+          square
+          filled
+          clearable
+          v-model="email"
+          type="email"
+          label="Email"
+        />
+        <q-card-section>
+          <q-btn
+            type="submit"
+            unelevated
+            color="light-green-7"
+            size="lg"
+            class="full-width"
+            label="Email küldése"
+          />
+        </q-card-section>
+        <q-card-section class="text-center q-pa-none" style="margin: 0px;">
+        <p
+          class="text-purple-10"
+          style="text-decoration: underline; cursor: pointer; margin: 0px;"
+          @click="forgotPassword = false"
+        >
+          Mégsem
+        </p>
+      </q-card-section>
+      </q-form>
     </q-card>
   </div>
 </template>
@@ -55,6 +104,7 @@ export default {
       email: "",
       username: "",
       password: "",
+      forgotPassword: false,
     };
   },
   methods: {
@@ -89,6 +139,23 @@ export default {
         }
       }
     },
+    async sendPasswordResetEmail() {
+      try {
+        const response = await axios.post("/api/reset-password", {
+          email: this.email,
+        });
+
+        if (response.status === 200) {
+          this.email = "";
+          alert("Email küldve!");
+        } else {
+          alert("Hiba történt!");
+        }
+      } catch(error) {
+        alert(error.response.data.error);
+        this.email = "";
+      }
+    }
   },
 };
 </script>

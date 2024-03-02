@@ -1,47 +1,48 @@
 <template>
-  <div v-if="user">
-    <div class="loading-container" v-if="loading">
-      <div class="loading-spinner"></div>
-    </div>
-    <div class="card-container q-mt-md flex justify-center" v-if="!loading && cards[0].title">
-      <q-card
-        v-for="(card, index) in cards"
-        :key="index"
-        class="q-ma-md"
-        style="min-width: 400px;"
-      >
-        <q-card-section>
-          <div>
-            <h1 class="text-h4 q-mb-md text-center">{{ card.category }}</h1>
-            <h2 class="text-h6 q-mb-md text-center">{{ card.title }}</h2>
-            <p class="text-body2 q-mb-md">{{ card.description }}</p>
-            <div class="q-mb-md">
-              <strong>Helyszín:</strong> {{ card.location }},
-              {{ card.place }}
-            </div>
-            <div class="q-mb-md">
-              <strong>Résztvevők:</strong> {{ card.participants }} fő
-            </div>
-            <div class="q-mb-md">
-              <strong>Időpont:</strong> {{ card.date }},
-              {{ card.time }}
-            </div>
-            <div class="q-mb-md">
-              <strong>Szervező:</strong> {{ card.creatorName }}
-            </div>
-          </div>
-        </q-card-section>
-      </q-card>
-    </div>
-    <div v-else-if="!loading && !cards[0].title">
-      <h1>no events</h1>
-    </div>
+  <div class="loading-container" v-if="loading">
+    <div class="loading-spinner"></div>
   </div>
-  <div v-else>
-    <h1>user not logged in</h1>
+  <div
+    class="card-container q-mt-md flex justify-center"
+    v-if="!loading && cards[0].title"
+  >
+    <q-card
+      v-for="(card, index) in cards"
+      :key="index"
+      class="q-ma-md justify-center"
+      :class="{ 'q-ma-lg': $q.screen.width > 1024 }"
+      :style="{ width: $q.screen.width > 1024 ? '400px' : '270px' }"
+    >
+      <q-card-section>
+        <div>
+          <h1 class="text-h4 q-mb-md text-center">{{ card.category }}</h1>
+          <h2 class="text-h6 q-mb-md text-center">{{ card.title }}</h2>
+          <p class="text-body2 q-mb-md">{{ card.description }}</p>
+          <div class="q-mb-md">
+            <strong>Helyszín:</strong> {{ card.location }},
+            {{ card.place }}
+          </div>
+          <div class="q-mb-md">
+            <strong>Résztvevők:</strong> {{ card.participants }} fő
+          </div>
+          <div class="q-mb-md">
+            <strong>Időpont:</strong> {{ card.date }},
+            {{ card.time }}
+          </div>
+          <div class="q-mb-md">
+            <strong>Szervező:</strong> {{ card.creatorName }}
+          </div>
+          <div class="q-mb-md">
+            <strong>Lerakó:</strong> {{ card.dumpName }}
+          </div>
+        </div>
+      </q-card-section>
+    </q-card>
+  </div>
+  <div v-else-if="!loading && !cards[0].title">
+    <h1>no events</h1>
   </div>
 </template>
-
 
 <script>
 import axios from "axios";
@@ -67,6 +68,7 @@ export default defineComponent({
           date: "",
           time: "",
           creatorName: "",
+          dumpName: "",
         },
         {
           title: "",
@@ -77,6 +79,7 @@ export default defineComponent({
           date: "",
           time: "",
           creatorName: "",
+          dumpName: "",
         },
         {
           category: "",
@@ -88,6 +91,7 @@ export default defineComponent({
           date: "",
           time: "",
           creatorName: "",
+          dumpName: "",
         },
       ],
       loading: true,
@@ -125,6 +129,13 @@ export default defineComponent({
           } else {
             this.cards[0].creatorName = "";
           }
+
+          if (this.mostParticipantsEvent.dumpId) {
+            const dumpResponse = await axios.get(`/api/dump/name/${this.mostParticipantsEvent.dumpId}`);
+            this.cards[0].dumpName = dumpResponse.data || "";
+          } else {
+            this.cards[0].dumpName = "-";
+          }
         }
       } catch (error) {
         console.error("Error fetching most participants event:", error);
@@ -153,6 +164,15 @@ export default defineComponent({
           } else {
             this.cards[1].creatorName = "";
           }
+
+          if (this.latestEvent.dumpId) {
+            const dumpResponse = await axios.get(
+              `/api/dump/name/${this.latestEvent.dumpId}`
+            );
+            this.cards[1].dumpName = dumpResponse.data || "";
+          } else {
+            this.cards[1].dumpName = "-";
+          }
         }
       } catch (error) {
         console.error("Error fetching latest event:", error);
@@ -180,6 +200,15 @@ export default defineComponent({
             this.cards[2].creatorName = creatorResponse.data.username || "";
           } else {
             this.cards[2].creatorName = "";
+          }
+
+          if (this.closestEvent.dumpId) {
+            const dumpResponse = await axios.get(
+              `/api/dump/name/${this.closestEvent.dumpId}`
+            );
+            this.cards[2].dumpName = dumpResponse.data || "";
+          } else {
+            this.cards[2].dumpName = "-";
           }
         }
       } catch (error) {

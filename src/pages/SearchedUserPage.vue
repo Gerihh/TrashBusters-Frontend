@@ -3,7 +3,7 @@
     <div class="loading-spinner"></div>
   </div>
 
-  <div v-if="!loading">
+  <div v-if="!loading && user">
     <div class="q-ma-lg row justify-center" v-if="user && !loading">
       <q-card
         class="my-card"
@@ -22,10 +22,13 @@
         </q-card-section>
       </q-card>
     </div>
-
-    <div v-if="!loading">
-      <div class="q-mt-md q-ma-lg" v-if="eventsCreatedByUser.length > 0">
+    <div  v-if="!loading">
+      <div  class="q-mt-md q-ma-lg" v-if="eventsCreatedByUser.length > 0">
         <q-table
+        :style="{
+        width: $q.screen.width > 1024 ? '1700px' : '270px',
+        margin: 'auto',
+      }"
           :rows="eventsCreatedByUser"
           :columns="columns"
           row-key="id"
@@ -34,8 +37,18 @@
           title="Szervező"
         />
       </div>
+      <div class="q-mt-md q-ma-lg" v-else>
+        <q-table
+          title="Szervező vagyok"
+          no-data-label="Jelenleg nem szervez egyetlen eseményt sem"
+        />
+      </div>
       <div class="q-mt-md q-ma-lg" v-if="eventsJoinedByUser.length > 0">
         <q-table
+        :style="{
+        width: $q.screen.width > 1024 ? '1700px' : '270px',
+        margin: 'auto',
+      }"
           :rows="eventsJoinedByUser"
           :columns="columns"
           row-key="id"
@@ -44,13 +57,22 @@
           title="Résztvevő"
         />
       </div>
+      <div class="q-mt-md q-ma-lg" v-else>
+        <q-table
+          title="Résztvevő vagyok"
+          no-data-label="Jelenleg nem vesz részt egyetlen eseményen sem"
+        />
+      </div>
     </div>
-
     <q-dialog v-model="cardVisible">
-      <q-card style="min-width: 450px; min-height: 100px">
+      <q-card class="q-ma-md justify-center"
+      :class="{ 'q-ma-lg': $q.screen.width > 1024 }"
+      :style="{ width: $q.screen.width > 1024 ? '400px' : '270px' }">
         <q-card-section>
           <div v-if="selectedRow">
-            <h2 class="text-h6 q-mb-md text-center">{{ selectedRow.title }}</h2>
+            <h2 class="text-h6 q-mb-md text-center">
+              {{ selectedRow.title }}
+            </h2>
             <p class="text-body2 q-mb-md">{{ selectedRow.description }}</p>
             <div class="q-mb-md">
               <strong>Helyszín:</strong> {{ selectedRow.location }},
@@ -66,6 +88,9 @@
             <div class="q-mb-md">
               <strong>Szervező:</strong> {{ creatorName }}
             </div>
+            <div class="q-mb-md">
+              <strong>Lerakó:</strong> {{ dumpName }}
+            </div>
           </div>
         </q-card-section>
         <q-card-section class="flex justify-center">
@@ -80,6 +105,12 @@
         </q-card-section>
       </q-card>
     </q-dialog>
+  </div>
+
+  <div v-if="!loading && !user">
+    <div class="q-ma-lg text-h6 text-center">
+      Nincs felhasználó ezzel az azonosítóval.
+    </div>
   </div>
 </template>
 
@@ -135,6 +166,7 @@ export default defineComponent({
       cardVisible: false,
       selectedRow: null,
       creatorName: null,
+      dumpName: null,
       loading: true,
     };
   },
@@ -176,6 +208,7 @@ export default defineComponent({
       this.selectedRow = row;
       this.cardVisible = true;
       await this.getCreatorName();
+      await this.getDumpName();
     },
     closeCard() {
       this.selectedRow = null;
@@ -196,6 +229,27 @@ export default defineComponent({
         this.creatorName = user.username;
       } catch (error) {
         console.error("Error fetching creator name:", error);
+      }
+    },
+    async getDumpName() {
+      try {
+        if (!this.selectedRow) {
+          return;
+        }
+        const eventResponse = await axios.get(
+          `/api/events/${this.selectedRow.id}`
+        );
+        if (eventResponse.data.dumpId) {
+          const response = await axios.get(
+            `/api/dump/name/${eventResponse.data.dumpId}`
+          );
+
+          this.dumpName = response.data;
+        } else {
+          this.dumpName = "-";
+        }
+      } catch (error) {
+        console.error("Error fetching dump name:", error);
       }
     },
     async fetchEventData() {

@@ -13,6 +13,7 @@ const routes = [
       },
       {
         path: "login",
+        name: "login",
         component: () => import("pages/LoginPage.vue"),
       },
       {
@@ -31,7 +32,11 @@ const routes = [
         path: "user/:id",
         component: () => import("pages/SearchedUserPage.vue"),
       },
-    ]
+      {
+        path: "password-recovery/:token",
+        component: () => import("pages/PasswordRecoveryPage.vue"),
+      },
+    ],
   },
   {
     path: "/profile",
@@ -49,9 +54,8 @@ const routes = [
         path: "settings",
         component: () => import("pages/ProfileSettingsPage.vue"),
       },
-    ]
+    ],
   },
-
 
   // Always leave this as last one,
   // but you can also remove it

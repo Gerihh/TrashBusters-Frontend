@@ -13,14 +13,23 @@
       square
       bordered
       class="q-pa-sm"
-      style=" min-width: 400px;"
+      :class="{ 'q-ma-lg': $q.screen.width > 1024 }"
+      :style="{ width: $q.screen.width > 1024 ? '500px' : '250px' }"
     >
-    <q-btn
+    <q-btn v-if="$q.screen.width > 1024"
         round
         icon="close"
         color="red"
         size="md"
-        style="top: -20px; right: -380px; margin: -10px;"
+        style="top: -20px; right: -480px; margin: -10px;"
+        @click="clearForm"
+      />
+      <q-btn v-if="$q.screen.width < 1024"
+        round
+        icon="close"
+        color="red"
+        size="md"
+        style="top: -20px; right: -230px; margin: -10px;"
         @click="clearForm"
       />
       <q-form @submit.prevent="createEvent">
@@ -84,6 +93,15 @@
           required
           class="q-ma-sm"
         />
+        <q-input
+          square
+          filled
+          clearable
+          v-model="dumpId"
+          type="dumpId"
+          label="Lerakó azonosítója"
+          class="q-ma-sm"
+        />
         <q-card-section>
           <q-btn
             type="submit"
@@ -116,6 +134,7 @@ export default {
       time: "",
       participants: "",
       creatorId: "",
+      dumpId: "",
       minDate: "",
     };
   },
@@ -143,6 +162,7 @@ export default {
           time: this.time,
           participants: this.participants + 1,
           creatorId: this.creatorId,
+          dumpId: this.dumpId,
         };
 
         await axios.post("/api/events", requestData);
@@ -162,9 +182,8 @@ export default {
         this.place = "";
         this.date = "";
         this.time = "";
-
-        this.showForm = false;
-    }
+        this.dumpId = ""
+    },
   },
 };
 </script>

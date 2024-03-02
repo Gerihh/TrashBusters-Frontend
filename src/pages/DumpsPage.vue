@@ -1,11 +1,13 @@
 <template>
-  <h1>dumps</h1>
+  <DumpFilterComponent/>
 </template>
 
 <script>
+import DumpFilterComponent from "src/components/DumpFilterComponent.vue";
 import { defineComponent } from "vue";
 
 export default defineComponent({
-  name: "DumpsPage",
+    name: "DumpsPage",
+    components: { DumpFilterComponent }
 });
 </script>
