@@ -22,9 +22,13 @@
         </q-card-section>
       </q-card>
     </div>
-    <div v-if="!loading">
-      <div class="q-mt-md q-ma-lg" v-if="eventsCreatedByUser.length > 0">
+    <div  v-if="!loading">
+      <div  class="q-mt-md q-ma-lg" v-if="eventsCreatedByUser.length > 0">
         <q-table
+        :style="{
+        width: $q.screen.width > 1024 ? '1700px' : '270px',
+        margin: 'auto',
+      }"
           :rows="eventsCreatedByUser"
           :columns="columns"
           row-key="id"
@@ -41,6 +45,10 @@
       </div>
       <div class="q-mt-md q-ma-lg" v-if="eventsJoinedByUser.length > 0">
         <q-table
+        :style="{
+        width: $q.screen.width > 1024 ? '1700px' : '270px',
+        margin: 'auto',
+      }"
           :rows="eventsJoinedByUser"
           :columns="columns"
           row-key="id"
@@ -57,7 +65,9 @@
       </div>
     </div>
     <q-dialog v-model="cardVisible">
-      <q-card style="min-width: 450px; min-height: 100px">
+      <q-card class="q-ma-md justify-center"
+      :class="{ 'q-ma-lg': $q.screen.width > 1024 }"
+      :style="{ width: $q.screen.width > 1024 ? '400px' : '270px' }">
         <q-card-section>
           <div v-if="selectedRow">
             <h2 class="text-h6 q-mb-md text-center">

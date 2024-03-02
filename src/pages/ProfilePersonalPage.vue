@@ -13,7 +13,7 @@
         <img
           :src="`${user.profilePictureURL}?${Date.now()}`"
           alt="Profilkép"
-          style="border-radius: 50%; height: 300px; width: 300px"
+          style="border-radius: 50%; height: 250px; width: 250px"
         />
         <div class="text-h6 text-center">
           {{ user.username }} #{{ user.id }}
@@ -25,6 +25,10 @@
   <div v-if="!loading">
     <div class="q-mt-md q-ma-lg" v-if="eventsCreatedByUser.length > 0">
       <q-table
+        :style="{
+          width: $q.screen.width > 1024 ? '1600px' : '270px',
+          margin: 'auto',
+        }"
         :rows="eventsCreatedByUser"
         :columns="columns"
         row-key="id"
@@ -43,6 +47,10 @@
 
     <div class="q-mt-md q-ma-lg" v-if="eventsJoinedByUser.length > 0">
       <q-table
+        :style="{
+          width: $q.screen.width > 1024 ? '1600px' : '270px',
+          margin: 'auto',
+        }"
         :rows="eventsJoinedByUser"
         :columns="columns"
         row-key="id"
@@ -197,8 +205,7 @@
       <q-card
         square
         bordered
-        class="q-pa-sm"
-        :class="{ 'q-ma-lg': $q.screen.width > 1024 }"
+        class="q-pa-sm q-ma-lg"
         :style="{ width: $q.screen.width > 1024 ? '500px' : '250px' }"
       >
         <q-btn
@@ -220,7 +227,10 @@
           color="red"
           size="md"
           style="top: -20px; right: -230px; margin: -10px"
-          @click="editEventVisible = false"
+          @click="
+            editEventVisible = false;
+            cardVisible = true;
+          "
         />
         <q-form @submit.prevent="updateEvent">
           <q-input
@@ -328,35 +338,28 @@
               class="q-mb-md"
               style="max-height: 180px; overflow-y: auto; margin: -25px"
             >
-              <!-- Set a maximum height for the list and make it scrollable -->
               <ul style="list-style-type: none; padding: 0; margin: 0">
                 <li v-for="participant in participants" :key="participant.id">
                   <div
-                    class="flex items-start"
+                    class="q-ma-md"
+                    style="display: flex; align-items: center"
                     @click="openUserProfile(participant.id)"
                   >
-                    <div class="q-mr-md">
-                      <!-- Set the participant's profile picture as the source -->
-                      <img
-                        :src="participant.profilePictureURL"
-                        alt="Participant Avatar"
-                        class="avatar"
-                        style="
-                          width: 30px;
-                          height: 30px;
-                          border-radius: 50%;
-                        "
-                      />
-                      <!-- You can provide a default image if the profile picture is not available -->
-                    </div>
-                    <div>
-                      <p
+                    <img
+                      :src="participant.profilePictureURL"
+                      alt="Participant Avatar"
+                      class="avatar q-mr-md"
+                      style="width: 30px; height: 30px; border-radius: 50%"
+                    />
+                    <p style="margin: 0">
+                      <span
                         class="clickable text-purple-10"
                         style="text-decoration: underline; cursor: pointer"
                       >
-                        {{ participant.username }}
-                      </p>
-                    </div>
+                        {{ participant.username }},
+                      </span>
+                      {{ participant.city }}
+                    </p>
                   </div>
                 </li>
               </ul>
@@ -587,7 +590,7 @@ export default defineComponent({
       try {
         const response = await axios.get(`/api/events/${this.selectedRow.id}`);
         this.editedEvent = response.data;
-        // Set the form fields with the values from the fetched event
+
         this.title = this.editedEvent.title;
         this.description = this.editedEvent.description;
         this.location = this.editedEvent.location;
@@ -595,7 +598,7 @@ export default defineComponent({
         this.date = this.editedEvent.date;
         this.time = this.editedEvent.time;
         this.dumpId = this.editedEvent.dumpId;
-        // Show the edit form
+
         this.editEventVisible = true;
         this.cardVisible = false;
       } catch (error) {
@@ -603,7 +606,6 @@ export default defineComponent({
       }
     },
     async updateEvent() {
-      // Implement the logic to update the event
       try {
         await axios.patch(`/api/events/${this.selectedRow.id}`, {
           title: this.editedEvent.title,
@@ -642,7 +644,9 @@ export default defineComponent({
       this.participantsCardVsible = true;
       this.cardVisible = false;
       this.getParticipantsByEventId();
-      const response = await axios.get(`/api/participants/event/${this.selectedRow.id}`);
+      const response = await axios.get(
+        `/api/participants/event/${this.selectedRow.id}`
+      );
 
       this.participants = response.data.users;
     },

@@ -9,8 +9,9 @@
     <q-card
       v-for="(card, index) in cards"
       :key="index"
-      class="q-ma-md"
-      style="min-width: 400px"
+      class="q-ma-md justify-center"
+      :class="{ 'q-ma-lg': $q.screen.width > 1024 }"
+      :style="{ width: $q.screen.width > 1024 ? '400px' : '270px' }"
     >
       <q-card-section>
         <div>

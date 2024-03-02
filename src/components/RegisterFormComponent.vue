@@ -28,6 +28,14 @@
           square
           filled
           clearable
+          v-model="city"
+          type="city"
+          label="Város"
+        />
+        <q-input
+          square
+          filled
+          clearable
           v-model="password"
           type="password"
           label="Jelszó"
@@ -71,6 +79,7 @@ export default {
     return {
       email: "",
       username: "",
+      city: "",
       password: "",
       passwordAgain: "",
     };
@@ -82,6 +91,7 @@ export default {
           await axios.post("/api/auth/register", {
             email: this.email,
             username: this.username,
+            city: this.city,
             password: this.password,
           });
 
@@ -93,6 +103,7 @@ export default {
           console.error("Hibás regisztráció:", error);
           this.email = "";
           this.username = "";
+          this.city = "";
           this.password = "";
           this.passwordAgain = "";
         }

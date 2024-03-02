@@ -2,7 +2,7 @@
   <div class="q-ma-lg" :class="{ 'q-ma-lg': $q.screen.width > 1024 }">
     <div
       :style="{
-        width: $q.screen.width > 1024 ? '1000px' : '300px',
+        width: $q.screen.width > 1024 ? '1000px' : '270px',
         margin: 'auto',
       }"
     >
@@ -65,6 +65,10 @@
 
   <div v-if="filteredData.length > 0" class="q-ma-lg" style="margin-top: 80px">
     <q-table
+    :style="{
+        width: $q.screen.width > 1024 ? '1700px' : '270px',
+        margin: 'auto',
+      }"
       :rows="filteredData"
       :columns="columns"
       row-key="id"

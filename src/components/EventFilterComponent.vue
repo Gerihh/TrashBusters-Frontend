@@ -89,6 +89,10 @@
   </div>
   <div v-if="filteredData.length > 0" class="q-ma-lg" style="margin-top: 80px">
     <q-table
+      :style="{
+        width: $q.screen.width > 1024 ? '1700px' : '270px',
+        margin: 'auto',
+      }"
       :rows="filteredData"
       :columns="columns"
       row-key="id"
@@ -187,38 +191,35 @@
               class="q-mb-md"
               style="max-height: 180px; overflow-y: auto; margin: -25px"
             >
-              <!-- Set a maximum height for the list and make it scrollable -->
               <ul style="list-style-type: none; padding: 0; margin: 0">
                 <li v-for="participant in participants" :key="participant.id">
                   <div
-                    class="flex items-start"
+                    class="q-ma-md"
+                    style="display: flex; align-items: center"
                     @click="openUserProfile(participant.id)"
                   >
-                    <div class="q-mr-md">
-                      <!-- Set the participant's profile picture as the source -->
-                      <img
-                        :src="participant.profilePictureURL"
-                        alt="Participant Avatar"
-                        class="avatar"
-                        style="width: 30px; height: 30px; border-radius: 50%"
-                      />
-                      <!-- You can provide a default image if the profile picture is not available -->
-                    </div>
-                    <div>
-                      <p
+                    <img
+                      :src="participant.profilePictureURL"
+                      alt="Participant Avatar"
+                      class="avatar q-mr-md"
+                      style="width: 30px; height: 30px; border-radius: 50%"
+                    />
+                    <p style="margin: 0">
+                      <span
                         class="clickable text-purple-10"
                         style="text-decoration: underline; cursor: pointer"
                       >
-                        {{ participant.username }}
-                      </p>
-                    </div>
+                        {{ participant.username }},
+                      </span>
+                      {{ participant.city }}
+                    </p>
                   </div>
                 </li>
               </ul>
             </div>
           </q-card-section>
         </div>
-        <div v-if="participants.length === 0 && !loading">
+        <div v-if="participants.length === 0 && loading">
           <p>No participants for this event.</p>
         </div>
       </q-card-section>
@@ -376,19 +377,22 @@ export default {
         }
 
         this.userId = user.id;
-        const response = await axios.get(
-          `/api/participants/event/${this.selectedRow.id}`
-        );
-        const participantCount = response.data.count;
+
         await axios.post("/api/participants", {
           eventId: this.selectedRow.id,
           userId: this.userId,
         });
+
+        const response = await axios.get(
+          `/api/participants/event/${this.selectedRow.id}`
+        );
+
+        const participantCount = response.data.count;
         await axios.patch(`/api/events/${this.selectedRow.id}`, {
-          participants: participantCount + 1,
+          participants: participantCount,
         });
 
-        this.participants = response.data.users
+        this.participants = response.data.users;
 
         alert("Sikeresen csatlakozott az eseményhez!");
         window.location.reload();
@@ -447,7 +451,9 @@ export default {
       this.participantsCardVsible = true;
       this.cardVisible = false;
       this.getParticipantsByEventId();
-      const response = await axios.get(`/api/participants/event/${this.selectedRow.id}`);
+      const response = await axios.get(
+        `/api/participants/event/${this.selectedRow.id}`
+      );
 
       this.participants = response.data.users;
     },
