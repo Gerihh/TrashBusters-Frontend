@@ -25,17 +25,20 @@
   </div>
 
   <q-dialog v-model="deleteConfirmationVisible">
-    <q-card>
-      <q-card-section class="text-h6">
-        Biztosan törölni szeretné a profilját?
-      </q-card-section>
-      <q-card-actions align="right">
-        <q-btn label="Nem" color="grey" @click="cancelDelete" />
-        <q-space />
-        <q-btn label="Igen" color="red" @click="confirmDelete" />
-      </q-card-actions>
-    </q-card>
-  </q-dialog>
+      <q-card>
+        <q-card-section>
+          <q-input
+            v-model="deletionCode"
+            label="Írja be a törlési kódot"
+            clearable
+          />
+        </q-card-section>
+        <q-card-actions align="right">
+          <!-- "Igen" button -->
+          <q-btn label="Igen" color="red" @click="confirmDelete" />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
 
   <q-dialog v-model="passwordChangeVisible">
     <q-card
