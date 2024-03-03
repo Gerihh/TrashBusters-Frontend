@@ -90,9 +90,13 @@ export default defineComponent({
           });
           alert("A jelszó sikeresen helyreállítva!");
           this.$router.push("/login");
+        } else {
+          alert("A jelszavak nem egyeznek meg!");
+          this.newPassword = "";
+          this.newPasswordAgain = "";
         }
       } catch (error) {
-        alert(error);
+        alert(error.response.data.error.password);
       }
     },
   },
