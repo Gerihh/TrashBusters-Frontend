@@ -16,20 +16,22 @@
       :class="{ 'q-ma-lg': $q.screen.width > 1024 }"
       :style="{ width: $q.screen.width > 1024 ? '500px' : '250px' }"
     >
-    <q-btn v-if="$q.screen.width > 1024"
+      <q-btn
+        v-if="$q.screen.width > 1024"
         round
         icon="close"
         color="red"
         size="md"
-        style="top: -20px; right: -480px; margin: -10px;"
+        style="top: -20px; right: -480px; margin: -10px"
         @click="clearForm"
       />
-      <q-btn v-if="$q.screen.width < 1024"
+      <q-btn
+        v-if="$q.screen.width < 1024"
         round
         icon="close"
         color="red"
         size="md"
-        style="top: -20px; right: -230px; margin: -10px;"
+        style="top: -20px; right: -230px; margin: -10px"
         @click="clearForm"
       />
       <q-form @submit.prevent="createEvent">
@@ -102,6 +104,15 @@
           label="Lerakó azonosítója"
           class="q-ma-sm"
         />
+        <q-input
+          square
+          filled
+          clearable
+          v-model="eventPicture"
+          type="file"
+          class="q-ma-sm"
+          accept="image/*"
+        />
         <q-card-section>
           <q-btn
             type="submit"
@@ -136,6 +147,7 @@ export default {
       creatorId: "",
       dumpId: "",
       minDate: "",
+      eventPicture: null,
     };
   },
   mounted() {
@@ -153,36 +165,40 @@ export default {
 
         this.creatorId = user.id;
 
-        const requestData = {
-          title: this.title,
-          description: this.description,
-          location: typeof this.location === "string" ? this.location : "",
-          place: typeof this.place === "string" ? this.place : "",
-          date: this.date,
-          time: this.time,
-          participants: this.participants + 1,
-          creatorId: this.creatorId,
-          dumpId: this.dumpId,
-        };
+        const formData = new FormData();
+        formData.append("title", this.title);
+        formData.append("description", this.description);
+        formData.append("location", this.location);
+        formData.append("place", this.place);
+        formData.append("date", this.date);
+        formData.append("time", this.time);
+        formData.append("participants", this.participants + 1);
+        formData.append("creatorId", this.creatorId);
+        formData.append("dumpId", this.dumpId);
+        formData.append("eventPicture", this.eventPicture[0]);
+        // Append eventPicture only if it is selected
 
-        await axios.post("/api/events", requestData);
+        const response = await axios.post("/api/events", formData);
+
+        // Handle the response as needed
+
         alert("Sikeresen létrehozta az eseményt!");
-
         this.clearForm();
-
       } catch (error) {
         console.error("Error creating event:", error);
         alert("Hiba a felvétel során!");
       }
     },
+
     clearForm() {
-        this.title = "";
-        this.description = "";
-        this.location = "";
-        this.place = "";
-        this.date = "";
-        this.time = "";
-        this.dumpId = ""
+      this.title = "";
+      this.description = "";
+      this.location = "";
+      this.place = "";
+      this.date = "";
+      this.time = "";
+      this.dumpId = "";
+      this.eventPicture = null;
     },
   },
 };

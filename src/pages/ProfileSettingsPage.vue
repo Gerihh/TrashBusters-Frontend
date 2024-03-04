@@ -133,7 +133,7 @@ export default defineComponent({
       formData.append("profilePicture", this.profilePicture);
 
       axios
-        .post(`/api/upload/${this.user.id}`, formData)
+        .post(`/api/upload-profile-picture/${this.user.id}`, formData)
         .then((response) => {
           this.user.profilePictureURL = response.data.url;
 
