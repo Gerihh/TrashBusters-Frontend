@@ -13,7 +13,7 @@
         <img
           :src="user.profilePictureURL"
           alt="Profilkép"
-          style="border-radius: 50%"
+          style="border-radius: 50%; height: 250px; width: 250px"
         />
         <q-card-section class="">
           <div class="text-h6 text-center">
@@ -22,13 +22,13 @@
         </q-card-section>
       </q-card>
     </div>
-    <div  v-if="!loading">
-      <div  class="q-mt-md q-ma-lg" v-if="eventsCreatedByUser.length > 0">
+    <div v-if="!loading">
+      <div class="q-mt-md q-ma-lg" v-if="eventsCreatedByUser.length > 0">
         <q-table
-        :style="{
-        width: $q.screen.width > 1024 ? '1700px' : '270px',
-        margin: 'auto',
-      }"
+          :style="{
+            width: $q.screen.width > 1024 ? '1700px' : '270px',
+            margin: 'auto',
+          }"
           :rows="eventsCreatedByUser"
           :columns="columns"
           row-key="id"
@@ -41,14 +41,18 @@
         <q-table
           title="Szervező vagyok"
           no-data-label="Jelenleg nem szervez egyetlen eseményt sem"
+          :style="{
+            width: $q.screen.width > 1024 ? '1700px' : '270px',
+            margin: 'auto',
+          }"
         />
       </div>
       <div class="q-mt-md q-ma-lg" v-if="eventsJoinedByUser.length > 0">
         <q-table
-        :style="{
-        width: $q.screen.width > 1024 ? '1700px' : '270px',
-        margin: 'auto',
-      }"
+          :style="{
+            width: $q.screen.width > 1024 ? '1700px' : '270px',
+            margin: 'auto',
+          }"
           :rows="eventsJoinedByUser"
           :columns="columns"
           row-key="id"
@@ -61,18 +65,31 @@
         <q-table
           title="Résztvevő vagyok"
           no-data-label="Jelenleg nem vesz részt egyetlen eseményen sem"
+          :style="{
+            width: $q.screen.width > 1024 ? '1700px' : '270px',
+            margin: 'auto',
+          }"
         />
       </div>
     </div>
     <q-dialog v-model="cardVisible">
-      <q-card class="q-ma-md justify-center"
-      :class="{ 'q-ma-lg': $q.screen.width > 1024 }"
-      :style="{ width: $q.screen.width > 1024 ? '400px' : '270px' }">
+      <q-card
+        class="q-ma-md justify-center"
+        :class="{ 'q-ma-lg': $q.screen.width > 1024 }"
+        :style="{ width: $q.screen.width > 1024 ? '400px' : '270px' }"
+      >
         <q-card-section>
           <div v-if="selectedRow">
             <h2 class="text-h6 q-mb-md text-center">
               {{ selectedRow.title }}
             </h2>
+            <div class="flex justify-center">
+              <img
+                :src="selectedRow.eventPictureURL"
+                alt="Esemény kép"
+                style="max-width: 100%; height: auto; margin-bottom: 10px"
+              />
+            </div>
             <p class="text-body2 q-mb-md">{{ selectedRow.description }}</p>
             <div class="q-mb-md">
               <strong>Helyszín:</strong> {{ selectedRow.location }},
@@ -88,9 +105,7 @@
             <div class="q-mb-md">
               <strong>Szervező:</strong> {{ creatorName }}
             </div>
-            <div class="q-mb-md">
-              <strong>Lerakó:</strong> {{ dumpName }}
-            </div>
+            <div class="q-mb-md"><strong>Lerakó:</strong> {{ dumpName }}</div>
           </div>
         </q-card-section>
         <q-card-section class="flex justify-center">
