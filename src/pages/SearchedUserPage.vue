@@ -83,7 +83,7 @@
             <h2 class="text-h6 q-mb-md text-center">
               {{ selectedRow.title }}
             </h2>
-            <div class="flex justify-center">
+            <div class="flex justify-center" v-if="selectedRow.eventPictureURL">
               <img
                 :src="selectedRow.eventPictureURL"
                 alt="Esemény kép"

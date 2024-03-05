@@ -110,8 +110,10 @@
           clearable
           v-model="eventPicture"
           type="file"
+          label="Kép kiválasztása"
           class="q-ma-sm"
           accept="image/*"
+          hidden
         />
         <q-card-section>
           <q-btn
@@ -175,7 +177,12 @@ export default {
         formData.append("participants", this.participants + 1);
         formData.append("creatorId", this.creatorId);
         formData.append("dumpId", this.dumpId);
-        formData.append("eventPicture", this.eventPicture[0]);
+
+        if (this.eventPicture)
+        {
+          formData.append("eventPicture", this.eventPicture[0]);
+        }
+
         // Append eventPicture only if it is selected
 
         const response = await axios.post("/api/events", formData);
