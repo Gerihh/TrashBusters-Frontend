@@ -110,7 +110,16 @@
       <q-card-section>
         <div v-if="selectedRow">
           <h2 class="text-h6 q-mb-md text-center">{{ selectedRow.title }}</h2>
-          <p class="text-body2 q-mb-md">{{ selectedRow.description }}</p>
+          <div class="flex justify-center" v-if="selectedRow.eventPictureURL">
+            <img
+              :src="selectedRow.eventPictureURL"
+              alt="Esemény kép"
+              style="max-width: 100%; height: auto; margin-bottom: 10px;"
+            />
+          </div>
+          <div v-if="selectedRow.description != 'null'">
+              <p class="text-body2 q-mb-md">{{ selectedRow.description }}</p>
+            </div>
           <div class="q-mb-md">
             <strong>Helyszín:</strong> {{ selectedRow.location }},
             {{ selectedRow.place }}

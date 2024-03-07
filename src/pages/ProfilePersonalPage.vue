@@ -5,7 +5,7 @@
 
   <div class="q-ma-lg flex justify-center" v-if="user && !loading">
     <q-card
-      class="flex flex-column items-center"
+      class="flex justify-center"
       flat
       style="background-color: #fafafa"
     >
@@ -40,6 +40,10 @@
     </div>
     <div class="q-mt-md q-ma-lg" v-else>
       <q-table
+        :style="{
+          width: $q.screen.width > 1024 ? '1600px' : '270px',
+          margin: 'auto',
+        }"
         title="Szervező vagyok"
         no-data-label="Jelenleg nem szervez egyetlen eseményt sem"
       />
@@ -62,6 +66,10 @@
     </div>
     <div class="q-mt-md q-ma-lg" v-else>
       <q-table
+        :style="{
+          width: $q.screen.width > 1024 ? '1600px' : '270px',
+          margin: 'auto',
+        }"
         title="Résztvevő vagyok"
         no-data-label="Jelenleg nem vesz részt egyetlen eseményen sem"
       />
@@ -82,7 +90,19 @@
               <h2 class="text-h6 q-mb-md text-center">
                 {{ selectedRow.title }}
               </h2>
+              <div
+                class="flex justify-center"
+                v-if="selectedRow.eventPictureURL"
+              >
+                <img
+                  :src="selectedRow.eventPictureURL"
+                  alt="Esemény kép"
+                  style="max-width: 100%; height: auto; margin-bottom: 10px"
+                />
+              </div>
+              <div v-if="selectedRow.description != 'null'">
               <p class="text-body2 q-mb-md">{{ selectedRow.description }}</p>
+            </div>
               <div class="q-mb-md">
                 <strong>Helyszín:</strong> {{ selectedRow.location }},
                 {{ selectedRow.place }}
