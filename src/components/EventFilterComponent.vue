@@ -117,7 +117,9 @@
               style="max-width: 100%; height: auto; margin-bottom: 10px;"
             />
           </div>
-          <p class="text-body2 q-mb-md">{{ selectedRow.description }}</p>
+          <div v-if="selectedRow.description != 'null'">
+              <p class="text-body2 q-mb-md">{{ selectedRow.description }}</p>
+            </div>
           <div class="q-mb-md">
             <strong>Helyszín:</strong> {{ selectedRow.location }},
             {{ selectedRow.place }}

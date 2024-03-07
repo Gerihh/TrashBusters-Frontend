@@ -3,7 +3,7 @@
     <input type="file" @change="handleFileChange" />
   </div>
   <div class="q-ma-lg flex justify-center">
-    <button @click="uploadProfilePicture">Upload Profile Picture</button>
+    <button @click="uploadProfilePicture">Profilkép feltöltése</button>
   </div>
 
   <div class="q-ma-lg flex justify-center">
@@ -138,7 +138,7 @@ export default defineComponent({
           this.user.profilePictureURL = response.data.url;
 
           Cookies.set("user", JSON.stringify(this.user));
-          console.log("File uploaded successfully:", response.data.url);
+          alert("Profilkép sikeresen frissítve");
         })
         .catch((error) => {
           console.error("Error uploading file:", error);

@@ -97,6 +97,8 @@ export default defineComponent({
         }
       } catch (error) {
         alert(error.response.data.error.password);
+        this.newPassword = "";
+        this.newPasswordAgain = "";
       }
     },
   },

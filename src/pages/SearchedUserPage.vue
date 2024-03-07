@@ -6,7 +6,7 @@
   <div v-if="!loading && user">
     <div class="q-ma-lg row justify-center" v-if="user && !loading">
       <q-card
-        class="my-card"
+        class="my-card flex justify-center"
         flat
         style="background-color: #fafafa; max-width: 300px"
       >
@@ -83,14 +83,16 @@
             <h2 class="text-h6 q-mb-md text-center">
               {{ selectedRow.title }}
             </h2>
-            <div class="flex justify-center" v-if="selectedRow.eventPictureURL">
+            <div class="flex justify-center" v-if="selectedRow.eventPictureURL != null">
               <img
                 :src="selectedRow.eventPictureURL"
                 alt="Esemény kép"
                 style="max-width: 100%; height: auto; margin-bottom: 10px"
               />
             </div>
-            <p class="text-body2 q-mb-md">{{ selectedRow.description }}</p>
+            <div v-if="selectedRow.description != 'null'">
+              <p class="text-body2 q-mb-md">{{ selectedRow.description }}</p>
+            </div>
             <div class="q-mb-md">
               <strong>Helyszín:</strong> {{ selectedRow.location }},
               {{ selectedRow.place }}
