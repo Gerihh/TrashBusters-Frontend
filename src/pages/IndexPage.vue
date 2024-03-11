@@ -23,7 +23,7 @@
             {{ card.place }}
           </div>
           <div class="q-mb-md">
-            <strong>Résztvevők:</strong> {{ card.participants }} fő
+            <strong>Résztvevők:</strong> {{ card.participants ? card.participants : 0 }} fő
           </div>
           <div class="q-mb-md">
             <strong>Időpont:</strong> {{ card.date }},
