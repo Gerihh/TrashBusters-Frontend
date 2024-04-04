@@ -115,7 +115,7 @@ export default {
           password: this.password,
         });
 
-        if (response.data.user.isVerified) {
+        if (response.data.user.isVerified == 1) {
           document.cookie = `token=${response.data.accessToken}; path=/;`;
           const userJson = JSON.stringify(response.data.user);
           document.cookie = `user=${userJson}; path=/;`;
@@ -127,7 +127,7 @@ export default {
         }
       } catch (error) {
         try {
-          if (!error.response.data.user.isVerified) {
+          if (error.response.data.user.isVerified == 0) {
             window.alert("Még nem erősítette meg a felhasználóját!");
           }
         } catch (error) {
