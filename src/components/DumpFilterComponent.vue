@@ -152,7 +152,7 @@ export default {
           name: "contactEmail",
           label: "Email",
           align: "left",
-          field: "contactPhone",
+          field: "contactEmail",
           sortable: true,
           headerStyle: "font-weight: bold; font-size: 16px;",
         },
